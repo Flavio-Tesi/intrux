@@ -4,6 +4,7 @@ import tornado.web
 import json
 import db_query
 import datetime
+import daisy_module
 
 class execute(tornado.web.RequestHandler):
 	def get(self):
@@ -13,6 +14,7 @@ class execute(tornado.web.RequestHandler):
 			self.write(json.dumps(db_query.read_lights()))
 		elif self.get_argument('cmd')=="change_light":
 			i = int(self.get_argument('id'))
+			daisy_module.P0_rising()
 			db_query.change_light(i)
 		elif self.get_argument('cmd')=="set_usercode":
 			i = int(self.get_argument('id'))

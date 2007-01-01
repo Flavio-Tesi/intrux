@@ -70,16 +70,14 @@ def P4_rising():
 		led[4].on()
 		led[6].on()
 		
+funzioni = [P0_rising, P1_rising, P2_rising, P3_rising, P4_rising]
 
+for i in range (0,5):
+	button[i].set_edge("rising", funzioni[i])
 
-button[0].set_edge("rising", P0_rising)
-button[1].set_edge("rising", P1_rising)
-button[2].set_edge("rising", P2_rising)
-button[3].set_edge("rising", P3_rising)
-button[4].set_edge("rising", P4_rising)
-button[5].set_edge("rising", P4_rising)
-button[6].set_edge("rising", P4_rising)
-button[7].set_edge("rising", P4_rising)
+button[5].set_edge("rising", funzioni[4])
+button[6].set_edge("rising", funzioni[4])
+button[7].set_edge("rising", funzioni[4])
 
 
 
