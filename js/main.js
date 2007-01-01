@@ -385,11 +385,13 @@ function query_verifyuser() {
 		},
 		success: function(data) { 
 			if (data == "LOGIN ADMIN") {
-				if (IsSmartphone()) window.location("/adminmobile.html",false);
+				if (IsSmartphone()) {
+					window.location = "/adminmobile.html";
+				}
 				else window.location = "/admin.html";
 			}
 			else if (data == "LOGIN USER") {
-				window.location("/user.html",false);
+				window.location = "/user.html";
 			}
 			else alert(data); 
 			
@@ -399,12 +401,71 @@ function query_verifyuser() {
 	});
 }
 
+function query_readintrusions() {
+	$.ajax({
+		url: "/execute",
+		type: "get",
+		data: { cmd: "read_intrusions" },
+		success: function(data) {
+			if (intrusion) {
+				obj = jQuery.parseJSON(data);
+				testo="<table class='basic'>";
+				testo+="<th>";
+				testo+="Stanza";
+				testo+="</th>";
+				testo+="<th>";
+				testo+="Stato";
+				testo+="</th>";
+				testo+="</tr>";
+				for (x in obj) {
+					testo+="<tr>";
+					testo+="<td>";
+					testo+=obj[x][6];
+					testo+="</td>";
+					testo+="<td>";		
+					testo+="<div align=\"center\"><div style=\"display: table-cell; text-align: center; vertical-align: middle; font-size: 12px; font-weight: bold;" 
+	/*				number_id = obj[x][0];
+					testo+=number_id.toString();
+					testo+= "\""
+	*/				status = obj[x][2];
+					if (status == 1) {
+						testo+= "background-color:red;";
+					}
+					else {
+						testo+= "background-color:green;";
+					}
+					testo+= "width: 25px; height: 25px; -moz-border-radius: 200px; border-radius: 200px; -webkit-border-radius: 200px;\"></div></div>"; 
+					testo+="</td>";
+					testo+="</tr>"; 
+				} 
+				testo+="</table>";
+				$("#tab_intrusioni").html(testo).hide().slideDown();
+			}
+			else $("#tab_intrusioni").hide();
+			intrusion = !intrusion;
+		}
+	});
+}
+
+function stop_allarme() {
+	$.ajax({
+		url: "/execute",
+		type: "get",
+		data: { cmd: "stop_allarme" },
+		success: function(data) { 
+			query_readintrusions();
+			alert ("allarme fermato"); }
+	});
+}
+
 $(document).ready(function() {
-    $( "#draggable" ).draggable();
+    $("#draggable" ).draggable();
     $("#tabs").tabs();
 	$("#readusers_button").click(function(){ query_readusers(); });
-	$("#readintrusions_button").click(function(){ query_readintrusions(); });
+	$("#intrusions_button").click(function(){ query_readintrusions(); });
 	$("#readlights_button").click(function(){ query_readlights(); });
 	$("#confermaLogin").click(function(){ query_verifyuser(); });
+	$("#ferma_allarme").click(function(){ stop_allarme(); });
+	
 	query_readrooms();
 });

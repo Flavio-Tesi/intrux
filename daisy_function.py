@@ -96,8 +96,11 @@ def alarm ():
 	luceAllarmeAvvenuto.on()
 	
 funzioni = [lCamera, lCameretta, lCucina, lSala, alarm]
-	
-	
+
+def stop_allarme ():
+	lampeggiante.off()
+	sirena.off()
+	luceAllarmeAvvenuto.off()
 
 def function():
 	if pulsanteLuceCamera.get():
@@ -108,5 +111,15 @@ def function():
 		lCucina()
 	if pulsanteLuceSala.get():
 		lSala()
-	if (intrusioneCamera.get()) | (intrusioneCameretta.get()) | (intrusioneCucina.get()) | (intrusioneSala.get()):
+	if intrusioneCamera.get():
 		alarm()
+		db_query.is_intrusion(1)
+	if intrusioneCameretta.get():
+		alarm()
+		db_query.is_intrusion(2)
+	if intrusioneCucina.get():
+		alarm()
+		db_query.is_intrusion(3)
+	if intrusioneSala.get():
+		alarm()
+		db_query.is_intrusion(4)

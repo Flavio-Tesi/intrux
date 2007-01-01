@@ -342,6 +342,58 @@ function query_changelight(i) {
 	});
 }
 
+function query_readintrusions() {
+	$.ajax({
+		url: "/execute",
+		type: "get",
+		data: { cmd: "read_intrusions" },
+		success: function(data) {
+			obj = jQuery.parseJSON(data);
+			testo="<table class='basic'>";
+			testo+="<th>";
+			testo+="Stanza";
+			testo+="</th>";
+			testo+="<th>";
+			testo+="Stato";
+			testo+="</th>";
+			testo+="</tr>";
+			for (x in obj) {
+				testo+="<tr>";
+				testo+="<td>";
+				testo+=obj[x][6];
+				testo+="</td>";
+				testo+="<td>";		
+				testo+="<div align=\"center\"><div style=\"display: table-cell; text-align: center; vertical-align: middle; font-size: 12px; font-weight: bold;" 
+				status = obj[x][2];
+				if (status == 1) {
+					testo+= "background-color:red;";
+				}
+				else {
+					testo+= "background-color:green;";
+				}
+				testo+= "width: 25px; height: 25px; -moz-border-radius: 200px; border-radius: 200px; -webkit-border-radius: 200px;\"></div></div>"; 
+				testo+="</td>";
+				testo+="</tr>"; 
+			} 
+			testo+="</table>";
+			$("#tab_intrusioni").html(testo).hide().slideDown();
+		}
+	});
+}
+
+function stop_allarme() {
+	$.ajax({
+		url: "/execute",
+		type: "get",
+		data: { cmd: "stop_allarme" },
+		success: function(data) { 
+			query_readintrusions();
+			alert ("allarme fermato"); }
+	});
+}
+
+
+
 
 $(document).ready(function() {
 	$("#utenti").click(function(){ query_readusers(); });
@@ -350,6 +402,7 @@ $(document).ready(function() {
 	$("#confermaLogin").click(function(){ query_verifyuser(); });
 	$("#button_log_temperature").click(function(){ query_temproom(); });
 	$("#button_graph_temperature").click(function(){ query_temproomgraph(); });
+	$("#ferma_allarme").click(function(){ stop_allarme(); });
 	
 	query_readrooms();
 });

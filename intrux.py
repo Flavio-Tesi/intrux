@@ -60,8 +60,6 @@ class execute(tornado.web.RequestHandler):
 					self.write("PASSWORD NON CORRISPONDENTI")
 			else:
 				self.write("PASSWORD ERRATA")	
-		
-		
 		elif self.get_argument('cmd')=="verify_user":									#verifica per login
 			username = str(self.get_argument('id'))
 			password = str(self.get_argument('pwd'))
@@ -72,9 +70,15 @@ class execute(tornado.web.RequestHandler):
 				self.write ("LOGIN USER")
 			else:
 				self.write ("LOGIN FAIL")
-			
-			
-			
+		
+		elif self.get_argument('cmd')=="read_intrusions":
+			self.write(json.dumps(db_query.read_intrusions()))
+		elif self.get_argument('cmd')=="stop_allarme":
+			daisy_function.stop_allarme()
+			db_query.stop_intrusion()
+		
+				
+				
 				
 		elif self.get_argument('cmd')=="temp_room":										#lettura temperature
 			rm = str(self.get_argument('rm'))
