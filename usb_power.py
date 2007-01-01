@@ -33,3 +33,6 @@ def off_hotspot():
 	a = os.popen("pkill -f \"hostapd hostapd.conf\"", "r")
 	b = a.read()
 	a.close()
+
+def leggi_directory_video:
+	return (os.listdir('.'))

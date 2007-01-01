@@ -446,8 +446,6 @@ function off_cam(){
 	});
 }
 	
-	
-	
 function visualizza_cam(height, width) {
 		testo = "<iframe src=\"http://37.116.136.195:8181/stream_simple.html\" scrolling=\"auto\" frameborder=\"1\" align=center	marginheight=\"0px\" marginwidth=\"0px\"";
 		testo+= "height=\"";
@@ -458,6 +456,16 @@ function visualizza_cam(height, width) {
 		$("#frame_cam").html(testo).hide().slideDown();
 }
 
+function video() {
+	$.ajax({
+		url: "/execute",
+		type: "get",
+		data: { cmd: "visualizza video" },
+		success: function(data) {
+			alert ("allarme avviato");
+		 }
+	});	
+}
 
 $(document).ready(function() {
 	$("#utenti").click(function(){ query_readusers(); });
@@ -471,6 +479,7 @@ $(document).ready(function() {
 	$("#on_cam").click(function(){ on_cam(); });
 	$("#on_cam_hd").click(function(){ on_cam_hd(); });
 	$("#off_cam").click(function(){ off_cam(); });
+	$("#video").click(function(){ video(); });
 	
 	query_readrooms();
 });
