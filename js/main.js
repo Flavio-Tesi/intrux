@@ -286,7 +286,8 @@ function query_setusercode(i) {
 		},
 		success: function(data) { 
 			query_readusers();
-			query_readusers();
+			$("#tab_utenti").hide().slideDown();
+			user = !user
 			$("#pwd0").val("");
 			$("#pwd1").val("");
 			$("#pwd2").val("");
@@ -351,7 +352,11 @@ function query_changelight(i) {
 		type: "get",
 		data: { cmd: "change_light",
 		id: i },
-		success: function(data) { query_readlights(); query_readlights(); }
+		success: function(data) { 
+			query_readlights(); 
+			$("#tab_luci").hide().slideDown();
+			light = !light;			
+		}
 	});
 }
 
@@ -452,11 +457,27 @@ function stop_allarme() {
 		url: "/execute",
 		type: "get",
 		data: { cmd: "stop_allarme" },
-		success: function(data) { 
-			query_readintrusions();
-			alert ("allarme fermato"); }
+		success: function(data) {
+			alert ("allarme fermato");
+			query_readintrusions()
+			$("#tab_intrusioni").hide().slideDown();
+			intrusion = !intrusion
+		 }
 	});
 }
+
+function start_allarme() {
+	$.ajax({
+		url: "/execute",
+		type: "get",
+		data: { cmd: "start_allarme" },
+		success: function(data) {
+			alert ("allarme avviato");
+		 }
+	});
+}
+
+
 
 function visualizza_cam(height, width) {
 		testo = "<iframe src=\"http://192.168.1.104:8080/control.htm\" scrolling=\"no\" frameborder=\"0\" align=center	marginheight=\"0px\" marginwidth=\"0px\"";
@@ -529,6 +550,7 @@ $(document).ready(function() {
 	$("#readlights_button").click(function(){ query_readlights(); });
 	$("#confermaLogin").click(function(){ query_verifyuser(); });
 	$("#ferma_allarme").click(function(){ stop_allarme(); });
+	$("#avvia_allarme").click(function(){ start_allarme(); });
 	$("#on_cam").click(function(){ on_cam(); });
 	$("#on_cam_hd").click(function(){ on_cam_hd(); });
 	$("#off_cam").click(function(){ off_cam(); });

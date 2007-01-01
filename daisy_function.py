@@ -1,6 +1,7 @@
 import ablib
 import time
 import db_query
+import os
 
 conn11 = 'D11'
 conn12 = 'D12'
@@ -94,15 +95,18 @@ def alarm ():
 		time.sleep(0.5)
 	sirena.on()
 	luceAllarmeAvvenuto.on()
-	
+
+
 funzioni = [lCamera, lCameretta, lCucina, lSala, alarm]
 
 def stop_allarme ():
 	lampeggiante.off()
 	sirena.off()
 	luceAllarmeAvvenuto.off()
+	db_query.stop_intrusion()
 
-def function():
+
+def luci():
 	if pulsanteLuceCamera.get():
 		lCamera()
 	if pulsanteLuceCameretta.get():
@@ -111,6 +115,8 @@ def function():
 		lCucina()
 	if pulsanteLuceSala.get():
 		lSala()
+
+def allarme():
 	if intrusioneCamera.get():
 		alarm()
 		db_query.is_intrusion(1)

@@ -392,27 +392,36 @@ function stop_allarme() {
 }
 
 function on_cam() {
-	
-	$.ajax({
-		url: "/execute",
-		type: "get",
-		data: { cmd: "on_cam" },
-		success: function(data) { 
-			visualizza_cam(480, 640);
-		}
-	});
+	h = $(window).height();
+	w = $(window).width();
+	if (h > w) alert("ruotare lo schermo!")
+	else {
+		
+		$.ajax({
+			url: "/execute",
+			type: "get",
+			data: { cmd: "on_cam" },
+			success: function(data) { 
+				visualizza_cam(480, 640);
+			}
+		});
+	}
 }
 	
 function on_cam_hd() {
-	
-	$.ajax({
-		url: "/execute",
-		type: "get",
-		data: { cmd: "on_cam_hd" },
-		success: function(data) { 
-			visualizza_cam(720, 1280);
-		}
-	});
+	h = $(window).height();
+	w = $(window).width();
+	if (h > w) alert("ruotare lo schermo!")
+	else {
+		$.ajax({
+			url: "/execute",
+			type: "get",
+			data: { cmd: "on_cam_hd" },
+			success: function(data) { 
+				visualizza_cam(720, 1280);
+			}
+		});
+	}
 }
 	
 function off_cam(){
@@ -429,10 +438,6 @@ function off_cam(){
 	
 	
 function visualizza_cam(height, width) {
-	
-	if (height > width) alert("ruotare lo schermo!")
-	
-	else {
 		testo = "<iframe src=\"http://192.168.1.104:8080/stream_simple.html\" scrolling=\"auto\" frameborder=\"1\" align=center	marginheight=\"0px\" marginwidth=\"0px\"";
 		testo+= "height=\"";
 		testo+=	height;
@@ -440,7 +445,6 @@ function visualizza_cam(height, width) {
 		testo+= width;
 		testo+= "\"></iframe>";
 		$("#frame_cam").html(testo).hide().slideDown();
-	}	
 }
 
 
