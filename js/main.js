@@ -84,12 +84,14 @@ function query_temproomgraph() {
 		},
 		success: function (data) {
 			if (!temp2) {
-				$("#tab_log_temperature").hide();
 				temp2 = !temp2
 				temp = true;
 			}
 			else if (data == "INSERIRE UNA DATA DI INIZIO" || data == "INSERIRE UNA DATA DI FINE") alert(data);
 			else {
+				
+				
+				
 				obj = jQuery.parseJSON(data);
 				var j = 0;
 				
@@ -125,8 +127,7 @@ function query_temproomgraph() {
 					}
 				}
 								
-				for (k=0; k<j; k++) { 				
-					
+				for (k=0; k<j; k++) { 									
 					var graphTemp = new RGraph.Line('grafico', asseY[k]);
 					graphTemp.Set('numxticks', 0);
 					graphTemp.Set('numyticks', 0);
@@ -136,16 +137,10 @@ function query_temproomgraph() {
 					graphTemp.Set('hmargin', 5);
 					graphTemp.Set('labels', asseX[k]);
 					graphTemp.Set('tooltips', tooltips[k]);
-					
 					RGraph.Effects.Line.Trace2(graphTemp);
 				}
 
 				
-				
-				
-				
-				
-			
 				temp2 = !temp2;
 				temp = true;
 			}
