@@ -2,84 +2,125 @@ import ablib
 import time
 import db_query
 
-connector_leds="D11"
+conn11 = 'D11'
+conn12 = 'D12'
+out0 = 'RL0'
+out1 = 'RL1'
+in0 = 'IN0'
+in1 = 'IN1'
+pos1 = 'first'
+pos2 = 'second'
 
-led = [
-	ablib.Daisy11(connector_leds,'L1'),
-	ablib.Daisy11(connector_leds,'L2'),
-	ablib.Daisy11(connector_leds,'L3'),
-	ablib.Daisy11(connector_leds,'L4'),
-	ablib.Daisy11(connector_leds,'L5'),
-	ablib.Daisy11(connector_leds,'L6'),
-	ablib.Daisy11(connector_leds,'L7'),
-	ablib.Daisy11(connector_leds,'L8'),
-]
+luceCamera =			ablib.Daisy8(connector=conn11,id=out0,position=pos1)
+luceCameretta =			ablib.Daisy8(connector=conn11,id=out1,position=pos1)
+luceCucina =			ablib.Daisy8(connector=conn11,id=out0,position=pos2)
+luceSala =				ablib.Daisy8(connector=conn11,id=out1,position=pos2)
+sirena =				ablib.Daisy8(connector=conn12,id=out0,position=pos1)
+lampeggiante = 			ablib.Daisy8(connector=conn12,id=out1,position=pos1)
+luceAllarmeAvvenuto =	ablib.Daisy8(connector=conn12,id=out0,position=pos2)
+
+pulsanteLuceCamera = 	ablib.Daisy8(connector=conn11,id=in0,position=pos1)
+pulsanteLuceCameretta = ablib.Daisy8(connector=conn11,id=in1,position=pos1)
+pulsanteLuceCucina = 	ablib.Daisy8(connector=conn11,id=in0,position=pos2)
+pulsanteLuceSala = 		ablib.Daisy8(connector=conn11,id=in1,position=pos2)
+intrusioneCamera =	 	ablib.Daisy8(connector=conn12,id=in0,position=pos1)
+intrusioneCameretta = 	ablib.Daisy8(connector=conn12,id=in1,position=pos1)
+intrusioneCucina = 		ablib.Daisy8(connector=conn12,id=in0,position=pos2)
+intrusioneSala = 		ablib.Daisy8(connector=conn12,id=in1,position=pos2)
 
 x = db_query.read_lights()
 lights = []
 
 for i in x:
-	if i[2]==0:
+	if i[2]!=0:
 		lights.append (True)
 	else:
 		lights.append (False)
-		
 
-for i in range (0, len(lights)):
-	if lights[i] == True:
-		led[i].off()
-	else:
-		led[i].on()		
+print lights
 
-def P0_rising():
+if lights[0]:
+	luceCamera.on()
+else:
+	luceCamera.off()
+if lights[1]:
+	luceCameretta.on()
+else:
+	luceCameretta.off()
+if lights[2]:
+	luceCucina.on()
+else:
+	luceCucina.off()
+if lights[3]:
+	luceSala.on()
+else:
+	luceSala.off()
+	
+def lCamera ():
 	if lights[0]:
-		led[0].on()
-		lights[0] = False
-		db_query.change_light(1)
+		luceCamera.off()
 	else:
-		led[0].off()
-		lights[0] = True
-		db_query.change_light(1)
-
-def P1_rising():
+		luceCamera.on()
+	lights[0] = not(lights[0])
+	db_query.change_light(1)
+	
+def lCameretta ():
 	if lights[1]:
-		led[1].on()
-		lights[1] = False
-		db_query.change_light(2)
+		luceCameretta.off()
 	else:
-		led[1].off()
-		lights[1] = True
-		db_query.change_light(2)
+		luceCameretta.on()
+	lights[1] = not(lights[1])
+	db_query.change_light(2)
 
-def P2_rising():
+def lCucina ():
 	if lights[2]:
-		led[2].on()
-		lights[2] = False
-		db_query.change_light(3)
+		luceCucina.off()
 	else:
-		led[2].off()
-		lights[2] = True
-		db_query.change_light(3)
+		luceCucina.on()
+	lights[2] = not(lights[2])
+	db_query.change_light(3)
 
-def P3_rising():
+def lSala ():
 	if lights[3]:
-		led[3].on()
-		lights[3] = False
-		db_query.change_light(4)
+		luceSala.off()
 	else:
-		led[3].off()
-		lights[3] = True
-		db_query.change_light(4)
+		luceSala.on()
+	lights[3] = not(lights[3])
+	db_query.change_light(4)
+	
+def alarm ():
+	for i in range (0,10):
+		lampeggiante.on()
+		time.sleep(0.5)
+		lampeggiante.off()
+		time.sleep(0.5)
+	sirena.on()
+	luceAllarmeAvvenuto.on()
+	
+funzioni = [lCamera, lCameretta, lCucina, lSala, alarm]
+	
+	
 
-def P4_rising():
-	if lights[4]:
-		for i in range (0,10):
-			led[5].on()
-			time.sleep(0.2)
-			led[5].off()
-			time.sleep(0.2)
-		led[4].on()
-		led[6].on()
-
-
-funzioni = [P0_rising, P1_rising, P2_rising, P3_rising, P4_rising]
+def function():
+	if pulsanteLuceCamera.get():
+		lCamera()
+	if pulsanteLuceCameretta.get():
+		lCameretta()
+	if pulsanteLuceCucina.get():
+		lCucina()
+	if pulsanteLuceSala.get():
+		lSala()
+	if intrusioneCamera.get() | intrusioneCameretta.get() | intrusioneCucina.get() | intrusioneSala.get():
+		alarm()
+	
+	
+		
+	
+		
+	
+		
+	
+		
+	
+		
+	

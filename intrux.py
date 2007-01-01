@@ -8,7 +8,9 @@ import threading
 import daisy_function
 import time
 import ablib
+import provaDaisy8
 
+"""
 class ThreadDaisy(threading.Thread):													#thread per pulsanti
 	def run(self):
 		connector_buttons="D12"
@@ -33,6 +35,19 @@ class ThreadDaisy(threading.Thread):													#thread per pulsanti
 t = ThreadDaisy()
 t.daemon = True
 t.start()	
+"""
+
+class ThreadDaisy(threading.Thread):													#thread per pulsanti
+	def run(self):
+		while True:
+			provaDaisy8.function()
+			time.sleep(1)	
+t = ThreadDaisy()
+t.daemon = True
+t.start()	
+
+
+
 
 class execute(tornado.web.RequestHandler):
 	def get(self):
@@ -148,5 +163,6 @@ application = tornado.web.Application([
 
 if __name__ == "__main__":
 	application.listen(80,"0.0.0.0")
+	print "OK 164"
 	tornado.ioloop.IOLoop.instance().start()
 	
