@@ -4,7 +4,6 @@ var intrusion = true;
 var pwd = true;
 var temp = true;
 var temp2 = true;
-var cam = true;
 
 function query_temproom(){
 	rm = selectroom.value;
@@ -459,34 +458,79 @@ function stop_allarme() {
 	});
 }
 
-function visualizza_cam() {
-	if 
-	
-	var height = $(window).height();
-	var width = $(window).width();
-	
-	if (height > width) alert("ruotare lo schermo!")
-	
-	else {
-		testo = "<iframe src=\"http://192.168.1.104:8080/stream_simple.html\" scrolling=\"auto\" frameborder=\"1\" align=center	marginheight=\"0px\" marginwidth=\"0px\"";
+function visualizza_cam(height, width) {
+		testo = "<iframe src=\"http://192.168.1.104:8080/control.htm\" scrolling=\"no\" frameborder=\"0\" align=center	marginheight=\"0px\" marginwidth=\"0px\"";
+		testo+= "height=\"";
+		testo+=	"640";
+		testo+= "\" width=\"";
+		testo+= "355";
+		testo+= "\"></iframe>";
+		$("#tab_control").html(testo).hide().show();
+		testo = "<iframe src=\"http://192.168.1.104:8080/stream_simple.html\" scrolling=\"no\" frameborder=\"0\" align=center	marginheight=\"0px\" marginwidth=\"0px\"";
 		testo+= "height=\"";
 		testo+=	height;
 		testo+= "\" width=\"";
 		testo+= width;
 		testo+= "\"></iframe>";
-		$("#frame_cam").html(testo).hide().slideDown();
-	}	
+		$("#tab_cam").html(testo).hide().show();
+
+}
+
+function on_cam(){
+	$.ajax({
+		url: "/execute",
+		type: "get",
+		data: { cmd: "on_cam" },
+		success: function(data) { 
+			document.getElementById("tab_control").style.height = "640px";
+			document.getElementById("tab_cam").style.height = "500px";
+			document.getElementById("tab_cam").style.width = "640px";
+			visualizza_cam(480, 640);
+			alert ("webcam accesa con risoluzione 640 x 480"); }
+	});
+}
+
+function on_cam_hd(){
+	$.ajax({
+		url: "/execute",
+		type: "get",
+		data: { cmd: "on_cam_hd" },
+		success: function(data) { 
+			document.getElementById("tab_control").style.height = "640px";
+			document.getElementById("tab_cam").style.height = "740px";
+			document.getElementById("tab_cam").style.width = "1280px";
+			visualizza_cam(720, 1280);
+			alert ("webcam accesa con risoluzione 1280 x 720"); }
+	});
+}
+
+function off_cam(){
+	$.ajax({
+		url: "/execute",
+		type: "get",
+		data: { cmd: "off_cam" },
+		success: function(data) {
+			alert ("webcam spenta"); 
+			$("#tab_control").hide();
+			$("#tab_cam").hide();
+		}
+	});
 }
 
 
 $(document).ready(function() {
 	query_readrooms();
     $("#draggable" ).draggable();
+    $("#tab_control").draggable();
+    $("#tab_cam").draggable();
     $("#tabs").tabs();
 	$("#readusers_button").click(function(){ query_readusers(); });
 	$("#intrusions_button").click(function(){ query_readintrusions(); });
 	$("#readlights_button").click(function(){ query_readlights(); });
 	$("#confermaLogin").click(function(){ query_verifyuser(); });
 	$("#ferma_allarme").click(function(){ stop_allarme(); });
-	$("#read_cam").click(function(){ visualizza_cam(); });
+	$("#on_cam").click(function(){ on_cam(); });
+	$("#on_cam_hd").click(function(){ on_cam_hd(); });
+	$("#off_cam").click(function(){ off_cam(); });
+	
 });

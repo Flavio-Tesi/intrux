@@ -7,6 +7,7 @@ import datetime
 import threading
 import daisy_function
 import time
+import usb_power
 
 """
 import screen_read
@@ -23,11 +24,19 @@ class ThreadTemp(threading.Thread):														#thread per log temperature
 	def run(self):
 		while True:
 			time.sleep(1800)
-tt = ThreadTemp
+tt = ThreadTemp()
 tt.daemon = True
 tt.start()
 
 """
+class ThreadCam(threading.Thread):														#thread per cam
+	def run(self):
+		usb_power.on_cam_640_480()	
+
+class ThreadCamHD(threading.Thread):													#thread per cam
+	def run(self):
+		usb_power.on_cam_1280_720()
+
 
 class ThreadDaisy(threading.Thread):													#thread per pulsanti
 	def run(self):
@@ -71,12 +80,30 @@ class execute(tornado.web.RequestHandler):
 			else:
 				self.write ("LOGIN FAIL")
 		
-		elif self.get_argument('cmd')=="read_intrusions":
+		elif self.get_argument('cmd')=="read_intrusions":								#lettura intrusioni
 			self.write(json.dumps(db_query.read_intrusions()))
-		elif self.get_argument('cmd')=="stop_allarme":
+		elif self.get_argument('cmd')=="stop_allarme":									#ferma allarme
 			daisy_function.stop_allarme()
 			db_query.stop_intrusion()
 		
+		elif self.get_argument('cmd')=="on_cam":
+			usb_power.off_cam()
+			time.sleep(1)
+			tc = ThreadCam()
+			tc.daemon = True
+			tc.start()	
+			time.sleep(2)
+		elif self.get_argument('cmd')=="on_cam_hd":
+			usb_power.off_cam()
+			time.sleep(1)
+			tc = ThreadCamHD()
+			tc.daemon = True
+			tc.start()
+			time.sleep(2)
+		elif self.get_argument('cmd')=="off_cam":
+			usb_power.off_cam()
+		
+			
 				
 				
 				
