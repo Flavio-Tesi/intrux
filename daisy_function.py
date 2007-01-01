@@ -37,8 +37,6 @@ for i in x:
 	else:
 		lights.append (False)
 
-print lights
-
 if lights[0]:
 	luceCamera.on()
 else:
@@ -110,17 +108,5 @@ def function():
 		lCucina()
 	if pulsanteLuceSala.get():
 		lSala()
-	if intrusioneCamera.get() | intrusioneCameretta.get() | intrusioneCucina.get() | intrusioneSala.get():
+	if (intrusioneCamera.get()) | (intrusioneCameretta.get()) | (intrusioneCucina.get()) | (intrusioneSala.get()):
 		alarm()
-	
-	
-		
-	
-		
-	
-		
-	
-		
-	
-		
-	

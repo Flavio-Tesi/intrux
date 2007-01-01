@@ -18,13 +18,22 @@ class ThreadScreen(threading.Thread):													#thread per schermo
 ts = ThreadScreen()
 ts.daemon = True
 ts.start()
+
+class ThreadTemp(threading.Thread):														#thread per log temperature
+	def run(self):
+		while True:
+			time.sleep(1800)
+tt = ThreadTemp
+tt.daemon = True
+tt.start()
+
 """
 
 class ThreadDaisy(threading.Thread):													#thread per pulsanti
 	def run(self):
 		while True:
 			daisy_function.function()
-			time.sleep(0.5)	
+			time.sleep(1)	
 td = ThreadDaisy()
 td.daemon = True
 td.start()	
@@ -143,6 +152,5 @@ application = tornado.web.Application([
 
 if __name__ == "__main__":
 	application.listen(80,"0.0.0.0")
-	print "OK 164"
 	tornado.ioloop.IOLoop.instance().start()
 	
