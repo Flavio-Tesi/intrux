@@ -3,6 +3,7 @@ import tornado.ioloop
 import tornado.web
 import json
 import db_query
+import time
 
 class execute(tornado.web.RequestHandler):
 	def get(self):
@@ -15,7 +16,7 @@ class execute(tornado.web.RequestHandler):
 			db_query.change_light(i)
 		elif self.get_argument('cmd')=="set_usercode":
 			i = int(self.get_argument('id'))
-			if self.get_argument('pwd0')=='0':
+			if self.get_argument('pwd0')=='a':
 				self.write("INSERIRE UNA PASSWORD VALIDA")
 			elif int(self.get_argument('pwd0'))==int(db_query.read_userCode(i)):
 				new_pwd = self.get_argument('pwd1')
@@ -26,6 +27,24 @@ class execute(tornado.web.RequestHandler):
 					self.write("PASSWORD NON CORRISPONDENTI")
 			else:
 				self.write("PASSWORD ERRATA")
+		elif self.get_argument('cmd')=="read_room":
+			i = self.get_argument('id')
+			self.write(json.dumps(db_query.read_room(i)))
+		elif self.get_argument('cmd')=="read_temp":
+			x = db_query.read_temperatures()
+			print x
+#			print x
+#			for i in x:
+#				print i[3]
+#				print type(i[3])
+#				y = str(i[3])
+#				print y
+#				print type(y)
+#				
+#				i[3] = str(i[3])
+#
+#			print x
+			self.write(json.dumps(x))
 			
 		
 application = tornado.web.Application([

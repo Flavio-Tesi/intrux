@@ -20,6 +20,18 @@ def set_userCode (i, code):
 	cur.execute("UPDATE users SET code=%d WHERE id=%d;" %(code,i))
 	db.commit()
 	
+def read_rooms():
+	cur.execute("SELECT * FROM rooms;")
+	return cur.fetchall()
+	
+def read_room(i):
+	cur.execute("SELECT name FROM rooms WHERE id=%d;" %i)
+	return cur.fetchone()[0]
+	
+def add_room(name):
+	cur.execute ("INSERT INTO rooms (name) VALUES, (%s);" %name)
+	db.commit()
+	
 def read_lights():
 	cur.execute ("SELECT * FROM lights;")
 	return cur.fetchall()
@@ -60,8 +72,6 @@ def read_logTempRD(id_room, dat):
 def set_temperature(id_room, val, dat, dattime):
 	cur.execute ("INSERT INTO temperatures (id_room, val, dat, dattime) VALUES, (%d, %d, %Y%m%d, %Y%m%d %H:%M:%S);" %(id_room, val, dat, dattime))
 	db.commit()
-
-
 
 def read_intrusions():
 	cur.execute ("SELECT * FROM intrusions;")

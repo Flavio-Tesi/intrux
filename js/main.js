@@ -3,6 +3,66 @@ var light = true;
 var intrusion = true;
 var pwd = true;
 
+function query_readtemperatures() {
+	$.ajax({
+		url: "/execute",
+		type: "get",
+		data: { cmd: "read_temp" },
+		success: function (data) {
+			obj = jQuery.parseJSON(data);
+			testo="<table class='basic'>";
+			testo+="<tr>";
+			testo+="<th>";
+			testo+="Stanza";
+			testo+="</th>";
+			testo+="<th>";
+			testo+="Valore";
+			testo+="</th>";
+			testo+="<th>";
+			testo+="Data";
+			testo+="</th>";
+			testo+="</tr>";
+			for (x in obj) {
+				testo+="<tr>";
+				testo+="<td>";
+				testo+="<button id = \"visual_roomTemp";
+				number_id = obj[x][1];
+				testo+=number_id.toString();
+				testo+= "\""
+				testo+= ">"
+				testo+= query_readroom([x][1]);
+				testo+= "</button>";
+				testo+="</td>";
+				testo+="<td>";
+				testo+=obj[x][2];
+				testo+="</td>";
+			
+				testo+="<td>";
+				testo+="<button id = \"visual_dateTemp";
+				number_id = obj[x][3];
+				testo+=number_id.toString();
+				testo+= "\""
+				testo+= ">"
+				testo+= query_readroom([x][3]);
+				testo+= "</button>";
+				testo+="</td>";
+			
+				testo+="</tr>"; 
+			}
+			$("#tab_temperature").html(testo).hide().slideDown();
+		}
+	});
+}
+
+function query_readroom(i) {
+	$.ajax({
+		url: "/execute",
+		type: "get",
+		data: { cmd: "read_room",
+			id: i },
+		success: function(data) { return data; }
+	});
+}
 
 function query_readusers() {	
 	$.ajax({
@@ -14,9 +74,6 @@ function query_readusers() {
 				obj = jQuery.parseJSON(data);
 				testo="<table class='basic'>";
 				testo+="<tr>";
-		/*		testo+="<th>";
-				testo+="Id";
-				testo+="</th>";		*/
 				testo+="<th>";
 				testo+="Nome";
 				testo+="</th>";
@@ -26,9 +83,6 @@ function query_readusers() {
 				testo+="</tr>";
 				for (x in obj) {
 					testo+="<tr>";
-		/*			testo+="<td nowrap valign='top'>";
-					testo+=obj[x][0];
-					testo+="</td>";		*/
 					testo+="<td>";
 					testo+=obj[x][1];
 					testo+="</td>";
@@ -74,9 +128,9 @@ function query_setusercode(i) {
 	x = $("#pwd0").val();
 	y = $("#pwd1").val();
 	z = $("#pwd2").val();
-	if (!Number(x)) x = "0";
-	if (!Number(y)) y = "0";
-	if (!Number(z)) z = "0";
+	if (!Number(x)) x = "a";
+	if (!Number(y)) y = "a";
+	if (!Number(z)) z = "a";
 	$.ajax({
 		url: "/execute",
 		type: "get",
@@ -164,4 +218,5 @@ $(document).ready(function() {
 	$("#readusers_button").click(function(){ query_readusers(); });
 	$("#readintrusions_button").click(function(){ query_readintrusions(); });
 	$("#readlights_button").click(function(){ query_readlights(); });
+	$("#temperatures_button").click(function(){query_readtemperatures(); });
 });
