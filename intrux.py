@@ -32,7 +32,6 @@ class execute(tornado.web.RequestHandler):
 			rm = str(self.get_argument('rm'))
 			di = str(self.get_argument('di'))
 			df = str(self.get_argument('df'))
-			
 			if (rm == "xx") & (di == "xx") & (df == "xx"):
 				x = db_query.read_temperatures()
 				y = []
@@ -47,6 +46,10 @@ class execute(tornado.web.RequestHandler):
 			elif (rm == "xx") & (di != "xx") & (df != "xx"):
 				di = datetime.datetime.strptime(str(self.get_argument('di')), "%m/%d/%Y")
 				df = datetime.datetime.strptime(str(self.get_argument('df')), "%m/%d/%Y")
+				if di>df:
+					dttemp = di
+					di = df
+					df = dttemp
 				x = []
 				while (di<=df):
 					y=db_query.read_logTempData(datetime.datetime.strftime(di,"%Y-%m-%d"))
@@ -75,8 +78,11 @@ class execute(tornado.web.RequestHandler):
 				rm = int(str(self.get_argument('rm'))[0])
 				di = datetime.datetime.strptime(str(self.get_argument('di')), "%m/%d/%Y")
 				df = datetime.datetime.strptime(str(self.get_argument('df')), "%m/%d/%Y")
+				if di>df:
+					dttemp = di
+					di = df
+					df = dttemp
 				x = []
-				
 				while (di<=df):
 					y=db_query.read_logTempRD(rm, datetime.datetime.strftime(di,"%Y-%m-%d"))
 					if (y != ()):
