@@ -28,23 +28,23 @@ class execute(tornado.web.RequestHandler):
 			else:
 				self.write("PASSWORD ERRATA")
 		elif self.get_argument('cmd')=="read_room":
-			i = self.get_argument('id')
+			i = int(self.get_argument('id'))
 			self.write(json.dumps(db_query.read_room(i)))
 		elif self.get_argument('cmd')=="read_temp":
 			x = db_query.read_temperatures()
-			print x
-#			print x
-#			for i in x:
-#				print i[3]
-#				print type(i[3])
-#				y = str(i[3])
-#				print y
-#				print type(y)
-#				
-#				i[3] = str(i[3])
-#
-#			print x
-			self.write(json.dumps(x))
+			y = []
+			for i in x:
+				a = (i[0], i[1], i[2], str(i[3]), str(i[4]), i[5], i[6])
+				y.append(a)
+			self.write(json.dumps(y))
+		elif self.get_argument('cmd')=="read_logTempRoom":
+			i = int(self.get_argument('id'))
+			x = db_query.read_logTempRoom(i)
+			y = []
+			for i in x:
+				a = (i[0], i[1], i[2], str(i[3]), str(i[4]))
+				y.append(a)
+			self.write(json.dumps(y))
 			
 		
 application = tornado.web.Application([

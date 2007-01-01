@@ -2,6 +2,7 @@ var user = true;
 var light = true;
 var intrusion = true;
 var pwd = true;
+var temp = true;
 
 function query_readtemperatures() {
 	$.ajax({
@@ -9,60 +10,115 @@ function query_readtemperatures() {
 		type: "get",
 		data: { cmd: "read_temp" },
 		success: function (data) {
+			if (temp) {
+				obj = jQuery.parseJSON(data);
+				testo="<table class='basic'>";
+				testo+="<tr>";
+				testo+="<th>";
+				testo+="Stanza";
+				testo+="</th>";
+				testo+="<th>";
+				testo+="Valore";
+				testo+="</th>";
+				testo+="<th>";
+				testo+="Data";
+				testo+="</th>";
+				testo+="</tr>";
+				for (x in obj) {
+					testo+="<tr>";
+					testo+="<td>";
+/*					testo+="<button class = \"stanzaID";
+					testo+=obj[x][1];
+					testo+="\""
+					testo+=">"		
+*/					testo+= obj[x][6];			
+/*					testo+="</button>";
+*/					testo+="</td>";
+					testo+="<td>";
+					testo+=obj[x][2];
+					testo+="</td>";
+				
+					testo+="<td>";
+/*					testo+="<button class = \"dateID";
+					number_id = obj[x][3];
+					testo+=number_id.toString();
+					testo+="\""
+					testo+=">"
+*/					testo+=obj[x][3];
+/*					testo+="</button>";
+*/					testo+="</td>";
+					testo+="</tr>"; 
+				}
+				$("#tab_temperature").html(testo).hide().slideDown();
+				
+/*				$(".stanzaID1").click(function(){ temproom(1); });
+				$(".stanzaID2").click(function(){ temproom(2); });
+				$(".stanzaID3").click(function(){ temproom(3); });
+				$(".stanzaID4").click(function(){ temproom(4); });
+*/				
+			}
+			else { $("#tab_temperature").hide(); }
+			temp = !temp;
+		}
+	});
+}
+
+/*
+function temproom (i) {
+	$.ajax({
+		url: "/execute",
+		type: "get",
+		data: { cmd: "read_logTempRoom",
+			id: i },
+		success: function(data) { 
 			obj = jQuery.parseJSON(data);
 			testo="<table class='basic'>";
 			testo+="<tr>";
-			testo+="<th>";
-			testo+="Stanza";
-			testo+="</th>";
 			testo+="<th>";
 			testo+="Valore";
 			testo+="</th>";
 			testo+="<th>";
 			testo+="Data";
 			testo+="</th>";
+			testo+="<th>";
+			testo+="Orario";
+			testo+="</th>";
 			testo+="</tr>";
 			for (x in obj) {
 				testo+="<tr>";
 				testo+="<td>";
-				testo+="<button id = \"visual_roomTemp";
-				number_id = obj[x][1];
-				testo+=number_id.toString();
-				testo+= "\""
-				testo+= ">"
-				testo+= query_readroom([x][1]);
-				testo+= "</button>";
-				testo+="</td>";
-				testo+="<td>";
 				testo+=obj[x][2];
 				testo+="</td>";
-			
 				testo+="<td>";
-				testo+="<button id = \"visual_dateTemp";
+				testo+="<button class = \"dateID";
 				number_id = obj[x][3];
 				testo+=number_id.toString();
-				testo+= "\""
-				testo+= ">"
-				testo+= query_readroom([x][3]);
-				testo+= "</button>";
+				testo+="\""
+				testo+=">"
+				testo+=obj[x][3];
+				testo+="</button>";
 				testo+="</td>";
-			
+				testo+="<td>";
+				testo+=obj[x][4];
+				testo+="</td>";
 				testo+="</tr>"; 
 			}
-			$("#tab_temperature").html(testo).hide().slideDown();
+			
+			$("#tab_log_temperature").html(testo).hide().slideDown();
+			
 		}
 	});
+}		*/
+
+function query_readrooms() {
+	<select>
+			<option>Camera</option>
+			<option>Cameretta</option>
+			<option>Cucina</option>
+			<option>Sala</option>
+			</select>
 }
 
-function query_readroom(i) {
-	$.ajax({
-		url: "/execute",
-		type: "get",
-		data: { cmd: "read_room",
-			id: i },
-		success: function(data) { return data; }
-	});
-}
 
 function query_readusers() {	
 	$.ajax({
@@ -116,7 +172,6 @@ function setusercode(i) {
 		testo+= "inserisci la tua nuova password <input id=\"pwd1\" type=\"password\" size=\"17\" maxlength=\"10\" /> <br>";
 		testo+= "inserisci nuovamente la tua nuova password <input id=\"pwd2\" type=\"password\" size=\"17\" maxlength=\"10\" /> <br>";
 		testo+= "<button id=\"conferma\">conferma</button>"
-	/*	testo+= "<input type=\"text\" readonly id = \"pwd_txt\" size=\"25\"/>"		*/
 		$("#pwd_mod").html(testo).hide().slideDown();
 		$("#conferma").click(function(){ query_setusercode(i); });
 	}
@@ -146,7 +201,6 @@ function query_setusercode(i) {
 			$("#pwd0").val("");
 			$("#pwd1").val("");
 			$("#pwd2").val("");
-	/*		$("#pwd_txt").val(data);		*/
 			alert(data);
 		}
 	});

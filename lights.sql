@@ -2,7 +2,7 @@ DROP TABLE IF EXISTS `lights`;
 
 CREATE TABLE IF NOT EXISTS `lights` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `id_room` varchar(25) NOT NULL ,
+  `id_room` int(11) NOT NULL ,
   `status` int(1) NOT NULL,
   PRIMARY KEY (`id`)
   FOREIGN KEY (id_room) REFERENCES rooms (id)
