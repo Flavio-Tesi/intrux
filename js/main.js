@@ -86,6 +86,12 @@ function query_temproomgraph() {
 			if (!temp2) {
 				temp2 = !temp2
 				temp = true;
+				var canvas = document.getElementById('grafico');
+				var ctx = canvas.getContext('2d');
+				ctx.clearRect(0, 0, canvas.width, canvas.height);
+				ctx.beginPath();
+		//		canvas.width = canvas.width;
+
 			}
 			else if (data == "INSERIRE UNA DATA DI INIZIO" || data == "INSERIRE UNA DATA DI FINE") alert(data);
 			else {
@@ -102,6 +108,7 @@ function query_temproomgraph() {
 				var asseY = new Array();
 				var asseX = new Array();
 				var	tooltips = new Array();
+				var keys = new Array();
 				var i;
 				
 				for (k=0; k<j; k++) {
@@ -120,24 +127,45 @@ function query_temproomgraph() {
 				
 				
 				for (k=0; k<j; k++) {
+					if (typeof(array[k][0])!="undefined") {
+						var i = k+1;
+						keys[k]= ["stanza numero " + i];
+					}
 					for (z=0; z<array[k].length; z++) {
 						asseY[k][z]=array[k][z][2];
 						asseX[k][z]=array[k][z][3];
 						tooltips[k][z]=(array[k][z][2]).toString() +" gradi, il giorno "+ (array[k][z][3]).toString() +", alle ore "+ (array[k][z][4]).toString();
+						
 					}
 				}
+				
+				var max = 100;
 								
 				for (k=0; k<j; k++) { 									
 					var graphTemp = new RGraph.Line('grafico', asseY[k]);
-					graphTemp.Set('numxticks', 0);
-					graphTemp.Set('numyticks', 0);
-					graphTemp.Set('background.grid', false);
+					graphTemp.Set('ylabels', false);
+					graphTemp.Set('background.grid', true);
 					graphTemp.Set('colors', colors[k]);
 					graphTemp.Set('linewidth', 5);
 					graphTemp.Set('hmargin', 5);
 					graphTemp.Set('labels', asseX[k]);
 					graphTemp.Set('tooltips', tooltips[k]);
-					RGraph.Effects.Line.Trace2(graphTemp);
+					graphTemp.Set('tooltips.event', 'onmousemove');
+					graphTemp.Set('chart.key', keys[k]);
+					graphTemp.Set('chart.key.position', 'gutter');
+					graphTemp.Set('chart.key.position.gutter.boxed', false);
+					graphTemp.Set('chart.key.position.x', ((graphTemp.canvas.width - 115 + 250*k) / 2) - 25);
+					
+					graphTemp.Draw();
+			//		RGraph.Effects.Line.Trace2(graphTemp);
+					
+					if (typeof(array[k][0])!="undefined") {
+						var yaxis = new RGraph.Drawing.YAxis('grafico', 20*(k+1));
+						yaxis.Set('colors', colors[k]);
+						yaxis.Set('text.color', 'black');
+						yaxis.Set('chart.max', max);
+						yaxis.Draw();
+					}
 				}
 
 				
@@ -147,33 +175,6 @@ function query_temproomgraph() {
 		}
 	});
 }
-
-
-function prova_inserimentoDati() {
-	
-	
-	var graphTemp = new RGraph.Line();
-	
-	graphTemp.Set('grafico', [1,5,3,8,2]);
-	graphTemp.Set('numxticks', 0)
-	graphTemp.Set('numyticks', 0)
-	graphTemp.Set('background.grid', false)
-	graphTemp.Set('colors', ['red'])
-	graphTemp.Set('linewidth', 5)
-	graphTemp.Set('hmargin', 5)
-	graphTemp.Set('labels', ['A','B','C','D','E']);
-	graphTemp.Set('tooltips', ['aaaa','bbbb','cccc','ddddd','eeeeee']);
-
-	graphTemp.Set('colors', ['green'])
-	graphTemp.Line('grafico', [5,1,2,6,3]);
-	
-	RGraph.Effects.Line.Trace2(graphTemp);
-
-	
-	
-}
-
-
 
 function query_readrooms() {
 	$.ajax({
@@ -195,11 +196,6 @@ function query_readrooms() {
 			testo+="<p>A Data: <input type=\"text\" id=\"datepickerend\" /></p>";
 			testo+="<button id=\"show_temp\">mostra log temperature</button>";
 			testo+="<button id=\"show_tempGraph\">mostra grafico temperature</button>";
-			
-			
-			testo+="<button id=\"prova\">PROVA</button>";
-			
-			
 			testo+="<script> $(function() { $( \"#datepickerinit\" ).datepicker();	});	</script>";
 			testo+="<script> $(function() { $( \"#datepickerend\" ).datepicker();	});	</script>";
 			
@@ -207,9 +203,6 @@ function query_readrooms() {
 		
 			$("#show_temp").click(function(){query_temproom(); });
 			$("#show_tempGraph").click(function(){query_temproomgraph(); });
-			
-			
-			$("#prova").click(function(){prova_inserimentoDati(); });	
 		}
 	});
 }
