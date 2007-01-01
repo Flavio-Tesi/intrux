@@ -7,47 +7,15 @@ import datetime
 import threading
 import daisy_function
 import time
-import ablib
-import provaDaisy8
-
-"""
-class ThreadDaisy(threading.Thread):													#thread per pulsanti
-	def run(self):
-		connector_buttons="D12"
-		button = [
-			ablib.Daisy5(connector_buttons,'P1'),
-			ablib.Daisy5(connector_buttons,'P2'),
-			ablib.Daisy5(connector_buttons,'P3'),
-			ablib.Daisy5(connector_buttons,'P4'),
-			ablib.Daisy5(connector_buttons,'P5'),
-			ablib.Daisy5(connector_buttons,'P6'),
-			ablib.Daisy5(connector_buttons,'P7'),
-			ablib.Daisy5(connector_buttons,'P8'),
-		]
-		for i in range (0,5):
-			button[i].set_edge("rising", daisy_function.funzioni[i])
-
-		button[5].set_edge("rising", daisy_function.funzioni[4])
-		button[6].set_edge("rising", daisy_function.funzioni[4])
-		button[7].set_edge("rising", daisy_function.funzioni[4])
-		while True: 
-			time.sleep(0.1)
-t = ThreadDaisy()
-t.daemon = True
-t.start()	
-"""
 
 class ThreadDaisy(threading.Thread):													#thread per pulsanti
 	def run(self):
 		while True:
-			provaDaisy8.function()
+			daisy_function.function()
 			time.sleep(1)	
 t = ThreadDaisy()
 t.daemon = True
 t.start()	
-
-
-
 
 class execute(tornado.web.RequestHandler):
 	def get(self):
