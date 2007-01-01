@@ -4,121 +4,95 @@ var intrusion = true;
 var pwd = true;
 var temp = true;
 
-function query_readtemperatures() {
+function query_temproom(){
+	rm = selectroom.value;
+	di = datepickerinit.value;
+	df = datepickerend.value;
+	if (rm == "Tutte") rm = "xx"
+	if (di == "") di = "xx"
+	if (df == "") df = "xx"	
 	$.ajax({
 		url: "/execute",
 		type: "get",
-		data: { cmd: "read_temp" },
+		data: { 
+			cmd: "temp_room",
+			rm: rm,
+			di: di,
+			df: df
+		},
 		success: function (data) {
-			if (temp) {
+			if (!temp) {
+				$("#tab_log_temperature").hide();
+				temp = !temp
+			}
+			else if (data == "INSERIRE UNA DATA DI INIZIO" || data == "INSERIRE UNA DATA DI FINE") alert(data);
+			else {
 				obj = jQuery.parseJSON(data);
 				testo="<table class='basic'>";
 				testo+="<tr>";
 				testo+="<th>";
-				testo+="Stanza";
-				testo+="</th>";
-				testo+="<th>";
-				testo+="Valore";
+				testo+="Temperatura";
 				testo+="</th>";
 				testo+="<th>";
 				testo+="Data";
+				testo+="</th>";
+				testo+="<th>";
+				testo+="Ora";
 				testo+="</th>";
 				testo+="</tr>";
 				for (x in obj) {
 					testo+="<tr>";
 					testo+="<td>";
-/*					testo+="<button class = \"stanzaID";
-					testo+=obj[x][1];
-					testo+="\""
-					testo+=">"		
-*/					testo+= obj[x][6];			
-/*					testo+="</button>";
-*/					testo+="</td>";
-					testo+="<td>";
 					testo+=obj[x][2];
 					testo+="</td>";
-				
 					testo+="<td>";
-/*					testo+="<button class = \"dateID";
-					number_id = obj[x][3];
-					testo+=number_id.toString();
-					testo+="\""
-					testo+=">"
-*/					testo+=obj[x][3];
-/*					testo+="</button>";
-*/					testo+="</td>";
+					testo+=obj[x][3];
+					testo+="</td>";
+					testo+="<td>";
+					testo+=obj[x][4];
+					testo+="</td>";
 					testo+="</tr>"; 
 				}
-				$("#tab_temperature").html(testo).hide().slideDown();
-				
-/*				$(".stanzaID1").click(function(){ temproom(1); });
-				$(".stanzaID2").click(function(){ temproom(2); });
-				$(".stanzaID3").click(function(){ temproom(3); });
-				$(".stanzaID4").click(function(){ temproom(4); });
-*/				
+				testo+="</table>";
+				$("#tab_log_temperature").html(testo).hide().slideDown();
+				temp = !temp
 			}
-			else { $("#tab_temperature").hide(); }
-			temp = !temp;
+			
 		}
 	});
+	
 }
 
-/*
-function temproom (i) {
+function query_readrooms() {
 	$.ajax({
 		url: "/execute",
 		type: "get",
-		data: { cmd: "read_logTempRoom",
-			id: i },
-		success: function(data) { 
+		data: { cmd: "read_rooms"},
+		success: function (data) {
 			obj = jQuery.parseJSON(data);
-			testo="<table class='basic'>";
-			testo+="<tr>";
-			testo+="<th>";
-			testo+="Valore";
-			testo+="</th>";
-			testo+="<th>";
-			testo+="Data";
-			testo+="</th>";
-			testo+="<th>";
-			testo+="Orario";
-			testo+="</th>";
-			testo+="</tr>";
+			testo ="Stanza: <select id = \"selectroom\"> <option>Tutte</option>";
 			for (x in obj) {
-				testo+="<tr>";
-				testo+="<td>";
-				testo+=obj[x][2];
-				testo+="</td>";
-				testo+="<td>";
-				testo+="<button class = \"dateID";
-				number_id = obj[x][3];
-				testo+=number_id.toString();
-				testo+="\""
-				testo+=">"
-				testo+=obj[x][3];
-				testo+="</button>";
-				testo+="</td>";
-				testo+="<td>";
-				testo+=obj[x][4];
-				testo+="</td>";
-				testo+="</tr>"; 
+				testo+="<option>";
+				testo+=obj[x][0];
+				testo+=". "
+				testo+=obj[x][1];
+				testo+="</option>";
 			}
+			testo+="</select>";
+			testo+="<p>Da Data: <input type=\"text\" id=\"datepickerinit\" /></p>";
+			testo+="<p>A Data: <input type=\"text\" id=\"datepickerend\" /></p>";
+			testo+="<button id=\"show_temp\">mostra log temperature</button>";
+			testo+="<button id=\"show_tempGraph\">mostra grafico temperature</button>";
+			testo+="<script> $(function() { $( \"#datepickerinit\" ).datepicker();	});	</script>";
+			testo+="<script> $(function() { $( \"#datepickerend\" ).datepicker();	});	</script>";
 			
-			$("#tab_log_temperature").html(testo).hide().slideDown();
-			
+			$("#tab_temperature").html(testo).hide().slideDown();
+		
+			$("#show_temp").click(function(){query_temproom(); });
+			$("#show_tempGraph").click(function(){query_temproomgraph(); });
 		}
 	});
-}		*/
-
-function query_readrooms() {
-	<select>
-			<option>Camera</option>
-			<option>Cameretta</option>
-			<option>Cucina</option>
-			<option>Sala</option>
-			</select>
 }
-
 
 function query_readusers() {	
 	$.ajax({
@@ -225,7 +199,7 @@ function query_readlights() {
 				for (x in obj) {
 					testo+="<tr>";
 					testo+="<td>";
-					testo+=obj[x][1];
+					testo+=obj[x][4];
 					testo+="</td>";
 					testo+="<td>";				
 					testo+="<button id = \"change_light_";
@@ -266,11 +240,10 @@ function query_changelight(i) {
 	});
 }
 
-
 $(document).ready(function() {
     $("#tabs").tabs();
 	$("#readusers_button").click(function(){ query_readusers(); });
 	$("#readintrusions_button").click(function(){ query_readintrusions(); });
 	$("#readlights_button").click(function(){ query_readlights(); });
-	$("#temperatures_button").click(function(){query_readtemperatures(); });
+	query_readrooms();
 });

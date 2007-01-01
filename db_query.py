@@ -33,7 +33,7 @@ def add_room(name):
 	db.commit()
 	
 def read_lights():
-	cur.execute ("SELECT * FROM lights, rooms WHERE lights.id_room = room.id;")
+	cur.execute ("SELECT * FROM lights, rooms WHERE lights.id_room = rooms.id;")
 	return cur.fetchall()
 
 def read_light(i):
@@ -58,19 +58,19 @@ def read_temperature(i):
 	return cur.fetchone()[0]
 	
 def read_logTempRoom(id_room):
-	cur.execute("SELECT * FROM temperatures WHERE id_room=%d;" %id_room)
+	cur.execute("SELECT * FROM temperatures WHERE id_room=%d ORDER BY dat;" %id_room)
 	return cur.fetchall()
 
 def read_logTempData(dat):
-	cur.execute("SELECT * FROM temperatures WHERE dat=%Y-%m-%d;" %dat)
+	cur.execute("SELECT * FROM temperatures WHERE dat=\"%s\";" %dat)
 	return cur.fetchall()
 	
 def read_logTempRD(id_room, dat):
-	cur.execute("SELECT * FROM temperatures WHERE dat=%Y%m%d && id_room=%d;" %(dat, id_room))
+	cur.execute("SELECT * FROM temperatures WHERE dat=\"%s\" AND id_room=%d;" %(dat, id_room))
 	return cur.fetchall()
 	
 def set_temperature(id_room, val, dat, ora):
-	cur.execute ("INSERT INTO temperatures (id_room, val, dat, dattime) VALUES, (%d, %d, %Y%m%d, %H:%M:%S);" %(id_room, val, dat, ora))
+	cur.execute ("INSERT INTO temperatures (id_room, val, dat, dattime) VALUES, (%d, %d, %s, %s);" %(id_room, val, dat, ora))
 	db.commit()
 
 def read_intrusions():

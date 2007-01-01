@@ -13,6 +13,6 @@ CREATE TABLE IF NOT EXISTS `temperatures` (
 
 /*LOCK TABLES `users` WRITE;*/
 
-INSERT INTO temperatures (id_room, val, dat, ora) VALUES ('1','12','2012-10-08', '12:00:38'), ('2','20','1990-11-23', '00:55:15'), ('3','35','2009-05-17', '17:10:00'), ('4','10','1993-03-02', '14:00:17');
+INSERT INTO temperatures (id_room, val, dat, ora) VALUES ('4','12','2012-10-08', '12:00:38'), ('1','20','1990-11-23', '00:55:15'), ('3','35','2009-05-17', '17:10:00'), ('2','10','1993-03-02', '14:00:17');
 
 UNLOCK TABLES;
