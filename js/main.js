@@ -89,8 +89,10 @@ function query_temproomgraph() {
 				var canvas = document.getElementById('grafico');
 				var ctx = canvas.getContext('2d');
 				ctx.clearRect(0, 0, canvas.width, canvas.height);
-				ctx.beginPath();
 		//		canvas.width = canvas.width;
+		//		i = ctx.createImageData(canvas.width, canvas.height);
+		//		ctx.putImageData(i, 0, 0);
+				ctx.beginPath();
 
 			}
 			else if (data == "INSERIRE UNA DATA DI INIZIO" || data == "INSERIRE UNA DATA DI FINE") alert(data);
