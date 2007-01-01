@@ -10,7 +10,6 @@ class execute(tornado.web.RequestHandler):
 		if self.get_argument('cmd')=="read_users":
 			self.write(json.dumps(db_query.read_users()))
 		elif self.get_argument('cmd')=="read_lights":
-			print db_query.read_lights()
 			self.write(json.dumps(db_query.read_lights()))
 		elif self.get_argument('cmd')=="change_light":
 			i = int(self.get_argument('id'))

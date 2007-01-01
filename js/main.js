@@ -63,6 +63,65 @@ function query_temproom(){
 	
 }
 
+function query_temproomgraph() {
+	rm = selectroom.value;
+	di = datepickerinit.value;
+	df = datepickerend.value;
+	if (rm == "Tutte") rm = "xx"
+	if (di == "") di = "xx"
+	if (df == "") df = "xx"	
+	$.ajax({
+		url: "/execute",
+		type: "get",
+		data: { 
+			cmd: "temp_room",
+			rm: rm,
+			di: di,
+			df: df
+		},
+		success: function (data) {
+			if (!temp) {
+				$("#tab_log_temperature").hide();
+				temp = !temp
+			}
+			else if (data == "INSERIRE UNA DATA DI INIZIO" || data == "INSERIRE UNA DATA DI FINE") alert(data);
+			else {
+				obj = jQuery.parseJSON(data);
+				
+				testo= "<script src=\"RGraph/libraries/RGraph.common.core.js\" ></script> <script src=\"RGraph/libraries/RGraph.common.dynamic.js\" ></script>"
+				testo+= "<script src=\"RGraph/libraries/RGraph.common.key.js\" ></script> <script src=\"RGraph/libraries/RGraph.drawing.rect.js\" ></script>"
+				testo+= "<script src=\"RGraph/libraries/RGraph.common.effects.js\" ></script> <script src=\"RGraph/libraries/RGraph.common.tooltips.js\" ></script>"
+				testo+= "<script src=\"RGraph/libraries/RGraph.bar.js\" ></script> <script src=\"RGraph/libraries/jquery.min.js\" ></script>"
+				testo+= "<script src=\"RGraph/libraries/RGraph.line.js\" ></script>"
+				testo+= "<script> window.onload = function () { var data = [";
+				for (x in obj) {
+					testo+=obj[x][2];
+					testo+=",";
+				}
+				testo=testo.substring(0,testo.length-1);
+				testo+= "]; var line = new RGraph.Line(\"TempGraph\", data) .Set('chart.background.barcolor1', 'white') .Set('chart.background.barcolor2', 'white')" 
+				testo+= ".Set('chart.background.grid.color', 'rgba(238,238,238,1)') .Set('chart.colors', ['red']) .Set('chart.linewidth', 2) .Set('chart.filled', true)"
+				testo+= ".Set('chart.hmargin', 5) .Set('chart.gutter.left', 40) .Set('chart.labels', ["
+				for (x in obj) {
+					testo+= "'";
+					testo+= obj[x][3];
+					testo+= "',";
+				} 
+				
+				testo=testo.substring(0,testo.length-1); 
+				testo += "]) .Draw(); } </script>"
+				
+				testo+= "<canvas width=\"600\" height=\"250\" id=\"TempGraph\" style=\"float: right\" class=\"animated rotateIn\"></canvas>";
+				
+				console.log (testo)
+				
+				$("#tab_log_temperature").html(testo).hide().slideDown();
+				temp = !temp
+			}
+		}
+	});
+}
+
 function query_readrooms() {
 	$.ajax({
 		url: "/execute",

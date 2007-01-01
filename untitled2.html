@@ -6,19 +6,7 @@
 <link rel="stylesheet" href="css/ui-lightness/jquery-ui-1.10.3.custom.min.css" />
 <script type="text/javascript" src="js/jquery-1.10.2.min.js"></script> 
 <script type="text/javascript" src="js/jquery-ui-1.10.3.custom.min.js"></script> 
-<script type="text/javascript" src="js/main.js"></script>
 
-<!--
-<script src="RGraph/libraries/RGraph.common.core.js" ></script>
-<script src="RGraph/libraries/RGraph.common.dynamic.js" ></script>
-<script src="RGraph/libraries/RGraph.common.key.js" ></script>
-<script src="RGraph/libraries/RGraph.drawing.rect.js" ></script>
-<script src="RGraph/libraries/RGraph.common.effects.js" ></script>
-<script src="RGraph/libraries/RGraph.common.tooltips.js" ></script>
-<script src="RGraph/libraries/RGraph.bar.js" ></script>
-<script src="RGraph/libraries/jquery.min.js" ></script>
-<script src="RGraph/libraries/RGraph.line.js" ></script>
--->
 
 </head>
 <body>
@@ -29,6 +17,9 @@
 		<li><a href="#tabs-3">Temperature</a></li>
 		<li><a href="#tabs-4">Luci</a></li>
 	  </ul>
+	  
+	<script> $(document).ready(function () { $("#tabs").tabs();	});	</script>
+	
 	  <div id="tabs-1">
 			<button id="readusers_button">mostra utenti</button>
 			<p id="tab_utenti"></p>
@@ -40,7 +31,17 @@
 	  </div>
 	  <div id="tabs-3">
 			<p id="tab_temperature"></p>
-			<p id="tab_log_temperature"></p>
+			<p id="tab_log_temperature">
+				<script src="RGraph/libraries/RGraph.common.core.js" ></script>
+				<script src="RGraph/libraries/RGraph.common.dynamic.js" ></script>
+				<script src="RGraph/libraries/RGraph.common.key.js" ></script>
+				<script src="RGraph/libraries/RGraph.drawing.rect.js" ></script>
+				<script src="RGraph/libraries/RGraph.common.effects.js" ></script>
+				<script src="RGraph/libraries/RGraph.common.tooltips.js" ></script>
+				<script src="RGraph/libraries/RGraph.bar.js" ></script>
+				<script src="RGraph/libraries/jquery.min.js" ></script>
+				<script src="RGraph/libraries/RGraph.line.js" ></script>
+			</p>
 	  </div>
 	  <div id="tabs-4">
 			<button id="readlights_button">mostra luci</button>

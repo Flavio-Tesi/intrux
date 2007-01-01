@@ -22,6 +22,32 @@
     <script>
         window.onload = function ()
         {
+			
+			// The data for the Line chart. Multiple lines are specified as seperate arrays.
+        var data = [10,4,17,50,25,19,20,25,30,29,30,29];
+    
+        // Create the Line chart object. The arguments are the canvas ID and the data array.
+        var line = new RGraph.Line("myLine", data)
+        
+        // The way to specify multiple lines is by giving multiple arrays, like this:
+        // var line = new RGraph.Line("myLine", [4,6,8], [8,4,6], [4,5,3])
+        
+            // Configure the chart to appear as you wish.
+            .Set('chart.background.barcolor1', 'white')
+            .Set('chart.background.barcolor2', 'white')
+            .Set('chart.background.grid.color', 'rgba(238,238,238,1)')
+            .Set('chart.colors', ['red'])
+            .Set('chart.linewidth', 2)
+            .Set('chart.filled', true)
+            .Set('chart.hmargin', 5)
+            .Set('chart.labels', ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'])
+            .Set('chart.gutter.left', 40)
+        
+            // Now call the .Draw() method to draw the chart.
+            .Draw();
+			
+			
+			
             var bar = new RGraph.Bar('cvs_bar', [[45,-60],[-65,-30],[40,80],[59,-48]])
                 .Set('colors', ['rgba(255, 176, 176, 0.5)', 'rgba(153, 208, 249,0.5)']) 
                 .Set('labels', ['Luis', 'Kevin', 'John', 'Gregory'])
