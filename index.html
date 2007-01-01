@@ -7,18 +7,11 @@
 <script type="text/javascript" src="js/jquery-1.10.2.min.js"></script> 
 <script type="text/javascript" src="js/jquery-ui-1.10.3.custom.min.js"></script> 
 <script type="text/javascript" src="js/main.js"></script>
-
-<!--
 <script src="RGraph/libraries/RGraph.common.core.js" ></script>
-<script src="RGraph/libraries/RGraph.common.dynamic.js" ></script>
-<script src="RGraph/libraries/RGraph.common.key.js" ></script>
-<script src="RGraph/libraries/RGraph.drawing.rect.js" ></script>
 <script src="RGraph/libraries/RGraph.common.effects.js" ></script>
-<script src="RGraph/libraries/RGraph.common.tooltips.js" ></script>
-<script src="RGraph/libraries/RGraph.bar.js" ></script>
-<script src="RGraph/libraries/jquery.min.js" ></script>
+<script src="RGraph/libraries/RGraph.common.dynamic.js" ></script>
 <script src="RGraph/libraries/RGraph.line.js" ></script>
--->
+
 
 </head>
 <body>
@@ -40,7 +33,12 @@
 	  </div>
 	  <div id="tabs-3">
 			<p id="tab_temperature"></p>
-			<p id="tab_log_temperature"></p>
+			<p id="tab_log_temperature">
+				<div>
+					<canvas id="grafico" width="1500" height="250" style="cursor: default;">[No canvas support]</canvas>
+				</div>
+			
+			</p>
 	  </div>
 	  <div id="tabs-4">
 			<button id="readlights_button">mostra luci</button>

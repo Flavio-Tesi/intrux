@@ -50,7 +50,7 @@ def change_light(i):
 	db.commit()	
 	
 def read_temperatures():
-	cur.execute ("SELECT * FROM temperatures, rooms WHERE temperatures.id_room = rooms.id ORDER BY dat;")
+	cur.execute ("SELECT * FROM temperatures, rooms WHERE temperatures.id_room = rooms.id ORDER BY dat, ora;")
 	return cur.fetchall()
 		
 def read_temperature(i):
@@ -58,7 +58,7 @@ def read_temperature(i):
 	return cur.fetchone()[0]
 	
 def read_logTempRoom(id_room):
-	cur.execute("SELECT * FROM temperatures WHERE id_room=%d ORDER BY dat;" %id_room)
+	cur.execute("SELECT * FROM temperatures WHERE id_room=%d ORDER BY dat, ora;" %id_room)
 	return cur.fetchall()
 
 def read_logTempData(dat):

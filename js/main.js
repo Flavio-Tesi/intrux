@@ -3,6 +3,7 @@ var light = true;
 var intrusion = true;
 var pwd = true;
 var temp = true;
+var temp2 = true;
 
 function query_temproom(){
 	rm = selectroom.value;
@@ -24,6 +25,7 @@ function query_temproom(){
 			if (!temp) {
 				$("#tab_log_temperature").hide();
 				temp = !temp
+				temp2 = true;
 			}
 			else if (data == "INSERIRE UNA DATA DI INIZIO" || data == "INSERIRE UNA DATA DI FINE") alert(data);
 			else {
@@ -56,6 +58,7 @@ function query_temproom(){
 				testo+="</table>";
 				$("#tab_log_temperature").html(testo).hide().slideDown();
 				temp = !temp
+				temp2 = true;
 			}
 			
 		}
@@ -80,50 +83,102 @@ function query_temproomgraph() {
 			df: df
 		},
 		success: function (data) {
-			if (!temp) {
+			if (!temp2) {
 				$("#tab_log_temperature").hide();
-				temp = !temp
+				temp2 = !temp2
+				temp = true;
 			}
 			else if (data == "INSERIRE UNA DATA DI INIZIO" || data == "INSERIRE UNA DATA DI FINE") alert(data);
 			else {
 				obj = jQuery.parseJSON(data);
+				var j = 0;
 				
+				for (x in obj) if (obj[x][1]>j) j =obj[x][1];
 				
-				testo = "<script src=\"RGraph/libraries/RGraph.common.core.js\" ></script> <script src=\"RGraph/libraries/RGraph.common.dynamic.js\" ></script>"
-				testo+= "<script src=\"RGraph/libraries/RGraph.common.key.js\" ></script> <script src=\"RGraph/libraries/RGraph.drawing.rect.js\" ></script>"
-				testo+= "<script src=\"RGraph/libraries/RGraph.common.effects.js\" ></script> <script src=\"RGraph/libraries/RGraph.common.tooltips.js\" ></script>"
-				testo+= "<script src=\"RGraph/libraries/RGraph.bar.js\" ></script> <script src=\"RGraph/libraries/jquery.min.js\" ></script>"
-				testo+= "<canvas width=\"600\" height=\"250\" id=\"TempGraph\" style=\"float: right\" class=\"animated rotateIn\"></canvas>";
-			/*	testo+= "<script src=\"RGraph/libraries/RGraph.common.core.js\" ></script>"
-				testo+= "<script src=\"RGraph/libraries/RGraph.common.effects.js\" ></script>"
-				testo+= "<script src=\"RGraph/libraries/RGraph.line.js\" ></script>"
-			*/	testo+= "<script> window.onload = function () { var data = [";
-				for (x in obj) {
-					testo+=obj[x][2];
-					testo+=",";
+				var colors = new Array (["black"], ["blue"], ["red"], ["green"], ["orange"], ["light blue"], ["brown"], ["yellow"], ["pink"], ["violet"]);
+				var array = new Array();
+				var asseY = new Array();
+				var asseX = new Array();
+				var	tooltips = new Array();
+				var i;
+				
+				for (k=0; k<j; k++) {
+					i = 0;
+					array[k] = new Array();
+					asseY[k] = new Array();
+					asseX[k] = new Array();
+					tooltips[k] = new Array();
+					for (x in obj) {
+						if (obj[x][1] == k+1) {
+							array[k][i] = obj[x];
+							i++;
+						}
+					}
 				}
-				testo=testo.substring(0,testo.length-1);
-				testo+= "]; var line = new RGraph.Line(\"TempGraph\", data) .Set('chart.background.barcolor1', 'white') .Set('chart.background.barcolor2', 'white')" 
-				testo+= ".Set('chart.background.grid.color', 'rgba(238,238,238,1)') .Set('chart.colors', ['red']) .Set('chart.linewidth', 2) .Set('chart.filled', true)"
-				testo+= ".Set('chart.hmargin', 5) .Set('chart.gutter.left', 40) .Set('chart.labels', ["
-				for (x in obj) {
-					testo+= "'";
-					testo+= obj[x][3];
-					testo+= "',";
-				} 
-				
-				testo=testo.substring(0,testo.length-1); 
-				testo += "]) .Draw(); } </script>"
 				
 				
-				console.log (testo)
+				for (k=0; k<j; k++) {
+					for (z=0; z<array[k].length; z++) {
+						asseY[k][z]=array[k][z][2];
+						asseX[k][z]=array[k][z][3];
+						tooltips[k][z]=(array[k][z][2]).toString() +" gradi, il giorno "+ (array[k][z][3]).toString() +", alle ore "+ (array[k][z][4]).toString();
+					}
+				}
+								
+				for (k=0; k<j; k++) { 				
+					
+					var graphTemp = new RGraph.Line('grafico', asseY[k]);
+					graphTemp.Set('numxticks', 0);
+					graphTemp.Set('numyticks', 0);
+					graphTemp.Set('background.grid', false);
+					graphTemp.Set('colors', colors[k]);
+					graphTemp.Set('linewidth', 5);
+					graphTemp.Set('hmargin', 5);
+					graphTemp.Set('labels', asseX[k]);
+					graphTemp.Set('tooltips', tooltips[k]);
+					
+					RGraph.Effects.Line.Trace2(graphTemp);
+				}
+
 				
-				$("#tab_log_temperature").html(testo).hide().slideDown();
-				temp = !temp
+				
+				
+				
+				
+			
+				temp2 = !temp2;
+				temp = true;
 			}
 		}
 	});
 }
+
+
+function prova_inserimentoDati() {
+	
+	
+	var graphTemp = new RGraph.Line();
+	
+	graphTemp.Set('grafico', [1,5,3,8,2]);
+	graphTemp.Set('numxticks', 0)
+	graphTemp.Set('numyticks', 0)
+	graphTemp.Set('background.grid', false)
+	graphTemp.Set('colors', ['red'])
+	graphTemp.Set('linewidth', 5)
+	graphTemp.Set('hmargin', 5)
+	graphTemp.Set('labels', ['A','B','C','D','E']);
+	graphTemp.Set('tooltips', ['aaaa','bbbb','cccc','ddddd','eeeeee']);
+
+	graphTemp.Set('colors', ['green'])
+	graphTemp.Line('grafico', [5,1,2,6,3]);
+	
+	RGraph.Effects.Line.Trace2(graphTemp);
+
+	
+	
+}
+
+
 
 function query_readrooms() {
 	$.ajax({
@@ -145,6 +200,11 @@ function query_readrooms() {
 			testo+="<p>A Data: <input type=\"text\" id=\"datepickerend\" /></p>";
 			testo+="<button id=\"show_temp\">mostra log temperature</button>";
 			testo+="<button id=\"show_tempGraph\">mostra grafico temperature</button>";
+			
+			
+			testo+="<button id=\"prova\">PROVA</button>";
+			
+			
 			testo+="<script> $(function() { $( \"#datepickerinit\" ).datepicker();	});	</script>";
 			testo+="<script> $(function() { $( \"#datepickerend\" ).datepicker();	});	</script>";
 			
@@ -152,6 +212,9 @@ function query_readrooms() {
 		
 			$("#show_temp").click(function(){query_temproom(); });
 			$("#show_tempGraph").click(function(){query_temproomgraph(); });
+			
+			
+			$("#prova").click(function(){prova_inserimentoDati(); });	
 		}
 	});
 }
