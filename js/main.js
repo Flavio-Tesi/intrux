@@ -88,12 +88,16 @@ function query_temproomgraph() {
 			else {
 				obj = jQuery.parseJSON(data);
 				
-				testo= "<script src=\"RGraph/libraries/RGraph.common.core.js\" ></script> <script src=\"RGraph/libraries/RGraph.common.dynamic.js\" ></script>"
+				
+				testo = "<script src=\"RGraph/libraries/RGraph.common.core.js\" ></script> <script src=\"RGraph/libraries/RGraph.common.dynamic.js\" ></script>"
 				testo+= "<script src=\"RGraph/libraries/RGraph.common.key.js\" ></script> <script src=\"RGraph/libraries/RGraph.drawing.rect.js\" ></script>"
 				testo+= "<script src=\"RGraph/libraries/RGraph.common.effects.js\" ></script> <script src=\"RGraph/libraries/RGraph.common.tooltips.js\" ></script>"
 				testo+= "<script src=\"RGraph/libraries/RGraph.bar.js\" ></script> <script src=\"RGraph/libraries/jquery.min.js\" ></script>"
+				testo+= "<canvas width=\"600\" height=\"250\" id=\"TempGraph\" style=\"float: right\" class=\"animated rotateIn\"></canvas>";
+			/*	testo+= "<script src=\"RGraph/libraries/RGraph.common.core.js\" ></script>"
+				testo+= "<script src=\"RGraph/libraries/RGraph.common.effects.js\" ></script>"
 				testo+= "<script src=\"RGraph/libraries/RGraph.line.js\" ></script>"
-				testo+= "<script> window.onload = function () { var data = [";
+			*/	testo+= "<script> window.onload = function () { var data = [";
 				for (x in obj) {
 					testo+=obj[x][2];
 					testo+=",";
@@ -111,7 +115,6 @@ function query_temproomgraph() {
 				testo=testo.substring(0,testo.length-1); 
 				testo += "]) .Draw(); } </script>"
 				
-				testo+= "<canvas width=\"600\" height=\"250\" id=\"TempGraph\" style=\"float: right\" class=\"animated rotateIn\"></canvas>";
 				
 				console.log (testo)
 				

@@ -1,41 +1,37 @@
 <!doctype html>
 <html>
 <head>
-<title>Welcome to InTrux system</title>
+<title>HI!!</title>
 <link type="text/css" href="css/intrux.css" rel="stylesheet" />
 <link rel="stylesheet" href="css/ui-lightness/jquery-ui-1.10.3.custom.min.css" />
+<script type="text/javascript" src="js/jquery-1.10.2.min.js"></script> 
+<script type="text/javascript" src="js/jquery-ui-1.10.3.custom.min.js"></script>
+<script src="RGraph/libraries/RGraph.common.core.js" ></script>
+<script src="RGraph/libraries/RGraph.common.effects.js" ></script>
+<script src="RGraph/libraries/RGraph.line.js" ></script>
+
+
+
 
 
 </head>
-
-
-<div>
-	<p>
+<body>
+	
+<p>
+	<canvas id="cvs" width="600" height="250" style="cursor: default;">[No canvas support]</canvas>
+	<script>
+		var line = new RGraph.Line('cvs', [4,5,5,6,6,7,4,5,6,8,8,9,15,16,24,25, null, null])
+			.Set('numxticks', 0)
+			.Set('numyticks', 0)
+			.Set('background.grid', false)
+			.Set('colors', ['black'])
+			.Set('linewidth', 5)
+			.Set('hmargin', 5)
+			.Set('ylabels', false)
 		
-		<script src="RGraph/libraries/RGraph.common.core.js" ></script>
-		<script src="RGraph/libraries/RGraph.common.dynamic.js" ></script>
-		<script src="RGraph/libraries/RGraph.common.key.js" ></script>
-		<script src="RGraph/libraries/RGraph.drawing.rect.js" ></script>
-		<script src="RGraph/libraries/RGraph.common.effects.js" ></script>
-		<script src="RGraph/libraries/RGraph.common.tooltips.js" ></script>
-		<script src="RGraph/libraries/RGraph.bar.js" ></script>
-		<script src="RGraph/libraries/jquery.min.js" ></script>
-		<script src="RGraph/libraries/RGraph.line.js" ></script>
-		<script>
-			window.onload = function ()
-			{
-				var data = [15,2,3,10,34,30,20,10,23,23,25,9,5,17,15,17,2,3,30,24,15,12,10,8,20];
-				var line = new RGraph.Line("myLine", data)
-				.Set('chart.background.barcolor1', 'white')
-				.Set('chart.background.barcolor2', 'white')
-				.Set('chart.linewidth', 2)
-				.Set('chart.filled', true)
-				.Set('chart.hmargin', 00)
-				.Set('chart.labels', ['2013-05-08','2013-05-08','2013-05-08','2013-05-08','2013-05-08','2013-05-08','2013-05-08','2013-05-08','2013-05-17','2013-05-17','2013-05-17','2013-05-17','2013-05-17','2013-05-17','2013-05-17','2013-05-17','2013-05-17','2013-05-17','2013-05-17','2013-05-17','2013-05-17','2013-05-17','2013-05-17','2013-05-17','2013-05-17'])
-				.Set('chart.gutter.left', 40)
-				.Draw();
-			}
-		</script>
-		<canvas width="1700" height="250" id="myLine" style="float: right" class="animated rotateIn"></canvas>
-	</p>
-</div>
+		RGraph.Effects.Line.Trace2(line);
+	</script>
+</p>
+
+</body>
+</html>
