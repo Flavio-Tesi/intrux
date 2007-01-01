@@ -2,9 +2,12 @@ DROP TABLE IF EXISTS `temperatures`;
 
 CREATE TABLE IF NOT EXISTS `temperatures` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `room` varchar(25) NOT NULL ,
+  `id_room` varchar(25) NOT NULL ,
   `val` int(8) DEFAULT NULL,
-  PRIMARY KEY (`room`)
+  `dat` timestamp (8) DEFAULT NULL, 
+  `dattime` timestamp (14) DEFAULT NULL, 
+  PRIMARY KEY (`id`)
+  FOREIGN KEY (id_room) REFERENCES rooms (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 /*LOCK TABLES `users` WRITE;*/

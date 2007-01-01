@@ -2,9 +2,12 @@
 
 CREATE TABLE IF NOT EXISTS `intrusions` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `room` varchar(25) NOT NULL ,
+  `id_room` varchar(25) NOT NULL ,
   `status` BIT(1) NOT NULL,
-  PRIMARY KEY (`room`)
+  `dat` timestamp (8) DEFAULT NULL, 
+  `dattime` timestamp (14) DEFAULT NULL, 
+  PRIMARY KEY (`id`)
+  FOREIGN KEY (id_room) REFERENCES rooms (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 /*LOCK TABLES `intrusions` WRITE;*/
