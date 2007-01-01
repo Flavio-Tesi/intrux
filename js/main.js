@@ -355,6 +355,24 @@ function query_changelight(i) {
 	});
 }
 
+function IsSmartphone() {
+	if (DetectUagent("android")) return true;
+	else if (DetectUagent("iphone")) return true;
+	else if (DetectUagent("ipod")) return true;
+	else if (DetectUagent("symbian")) return true;
+    else if (DetectUagent("blackberry")) return true;
+    else if (DetectUagent("palm")) return true;
+	return false;
+}
+
+function DetectUagent(name) {
+	var uagent = navigator.userAgent.toLowerCase();
+	if (uagent.search(name) > -1)
+		return true;
+	else
+		return false;
+}
+
 function query_verifyuser() {
 	username = $("#username").val();
 	password = $("#password").val();
@@ -366,11 +384,12 @@ function query_verifyuser() {
 		pwd: password
 		},
 		success: function(data) { 
-			if (data == "LOGIN ADMIN") {				
-				window.open("/admin.html",false)
+			if (data == "LOGIN ADMIN") {
+				if (IsSmartphone()) window.location("/adminmobile.html",false);
+				else window.location = "/admin.html";
 			}
 			else if (data == "LOGIN USER") {
-				window.open("/user.html",false)
+				window.location("/user.html",false);
 			}
 			else alert(data); 
 			

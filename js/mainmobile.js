@@ -191,7 +191,7 @@ function query_readrooms() {
 			testo+="<label for=\"datepickerinit\">Da Data:</label>"
 			testo+="<input type=\"date\" data-clear-btn=\"false\" name=\"date-1\" id=\"datepickerinit\" value=\"\">"
 			testo+="<label for=\"datepickerend\">A Data:</label>"
-			testo+="<input type=\"date\" data-clear-btn=\"true\" name=\"date-2\" id=\"datepickerend\" value=\"\">"
+			testo+="<input type=\"date\" data-clear-btn=\"false\" name=\"date-2\" id=\"datepickerend\" value=\"\">"
 			
 			
 			$("#par_temp").html(testo).hide().slideDown();
@@ -342,34 +342,10 @@ function query_changelight(i) {
 	});
 }
 
-function query_verifyuser() {
-	username = $("#username").val();
-	password = $("#password").val();
-	$.ajax({
-		url: "/execute",
-		type: "get",
-		data: { cmd: "verify_user",
-		id:  username,
-		pwd: password
-		},
-		success: function(data) { 
-			if (data == "LOGIN ADMIN") {				
-				window.open("/admin.html",false)
-			}
-			else if (data == "LOGIN USER") {
-				window.open("/user.html",false)
-			}
-			else alert(data); 
-			
-			$("#username").val("");
-			$("#password").val("");	
-		}
-	});
-}
 
 $(document).ready(function() {
 	$("#utenti").click(function(){ query_readusers(); });
-	$("#readintrusions_button").click(function(){ query_readintrusions(); });
+	$("#intrusioni").click(function(){ query_readintrusions(); });
 	$("#luci").click(function(){ query_readlights(); });
 	$("#confermaLogin").click(function(){ query_verifyuser(); });
 	$("#button_log_temperature").click(function(){ query_temproom(); });
