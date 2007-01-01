@@ -2,7 +2,7 @@ import os
 
 def on_cam_640_480():
 	os.chdir("/root/mjpg-streamer/")
-	a = os.popen("./mjpg_streamer -i \"./input_uvc.so -f 15 -r 640x480\" -o \"./output_http.so -w ./www\"", "r")
+	a = os.popen("./mjpg_streamer -i \"./input_uvc.so -f 15 -r 160x120\" -o \"./output_http.so -p 8181 -w ./www\"", "r")
 	os.chdir("/root/intrux/")
 	b = a.read()
 	a.close()
@@ -10,7 +10,7 @@ def on_cam_640_480():
 	
 def on_cam_1280_720():
 	os.chdir("/root/mjpg-streamer/")
-	a = os.popen("./mjpg_streamer -i \"./input_uvc.so -f 15 -r 1280x720\" -o \"./output_http.so -w ./www\"", "r")
+	a = os.popen("./mjpg_streamer -i \"./input_uvc.so -f 15 -r 1280x720\" -o \"./output_http.so -p 8181 -w ./www\"", "r")
 	os.chdir("/root/intrux/")
 	b = a.read()
 	a.close()
@@ -24,6 +24,7 @@ def off_cam():
 def on_hotspot():
 	os.chdir("/root/")
 	a = os.popen("hostapd hostapd.conf &", "r")
+	os.chdir("/root/intrux/")
 	b = a.read()
 	a.close()
 	os.chdir("/root/intrux/")

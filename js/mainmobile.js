@@ -391,6 +391,17 @@ function stop_allarme() {
 	});
 }
 
+function start_allarme() {
+	$.ajax({
+		url: "/execute",
+		type: "get",
+		data: { cmd: "start_allarme" },
+		success: function(data) {
+			alert ("allarme avviato");
+		 }
+	});
+}
+
 function on_cam() {
 	h = $(window).height();
 	w = $(window).width();
@@ -438,7 +449,7 @@ function off_cam(){
 	
 	
 function visualizza_cam(height, width) {
-		testo = "<iframe src=\"http://192.168.1.104:8080/stream_simple.html\" scrolling=\"auto\" frameborder=\"1\" align=center	marginheight=\"0px\" marginwidth=\"0px\"";
+		testo = "<iframe src=\"http://37.116.136.195:8181/stream_simple.html\" scrolling=\"auto\" frameborder=\"1\" align=center	marginheight=\"0px\" marginwidth=\"0px\"";
 		testo+= "height=\"";
 		testo+=	height;
 		testo+= "\" width=\"";
@@ -456,6 +467,7 @@ $(document).ready(function() {
 	$("#button_log_temperature").click(function(){ query_temproom(); });
 	$("#button_graph_temperature").click(function(){ query_temproomgraph(); });
 	$("#ferma_allarme").click(function(){ stop_allarme(); });
+	$("#avvia_allarme").click(function(){ start_allarme(); });
 	$("#on_cam").click(function(){ on_cam(); });
 	$("#on_cam_hd").click(function(){ on_cam_hd(); });
 	$("#off_cam").click(function(){ off_cam(); });

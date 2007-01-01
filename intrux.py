@@ -9,6 +9,7 @@ import daisy_function
 import time
 import usb_power
 import rfid
+import send_email
 
 """
 import screen_read
@@ -50,7 +51,7 @@ class ThreadCamHD(threading.Thread):													#thread per cam
 		self._stop.set()
 	def run(self):
 		usb_power.on_cam_1280_720()
-tchd = ThreadCam()
+tchd = ThreadCamHD()
 tchd.daemon = True
 
 class ThreadAllarme(threading.Thread):													# thread allarme
@@ -67,8 +68,7 @@ class ThreadAllarme(threading.Thread):													# thread allarme
 			time.sleep(0.1)					
 ta = ThreadAllarme()
 ta.daemon = True
-
-
+ta.stop()
 
 class ThreadLuci(threading.Thread):														#thread per luci
 	def run(self):
@@ -82,18 +82,26 @@ tl.start()
 class ThreadRFID(threading.Thread):														#thread per rfid
 	def run(self):
 		while True:
-			if (rfid.function()):
+			if rfid.function() == "admin": 
 				if ta.stopped():
 					ta.__init__()
 					ta.start()
 				else:
+					daisy_function.stop_allarme()
 					ta.stop()
+			if (rfid.function() == "user"):
+				if ta.stopped():
+					ta.__init__()
+					ta.start()
+				else:
+					daisy_function.stop_allarme()
+					ta.stop()
+					send_email.invia_email_rfid_utente()
+				
 			time.sleep(0.1)	
 tr = ThreadRFID()
 tr.daemon = True
 tr.start()
-
-
 
 class execute(tornado.web.RequestHandler):
 	def get(self):
@@ -127,19 +135,16 @@ class execute(tornado.web.RequestHandler):
 				self.write ("LOGIN USER")
 			else:
 				self.write ("LOGIN FAIL")
-		
 		elif self.get_argument('cmd')=="read_intrusions":								#lettura intrusioni
 			self.write(json.dumps(db_query.read_intrusions()))
 		
 		elif self.get_argument('cmd')=="stop_allarme":									#ferma allarme	
-			ta.stop()
 			daisy_function.stop_allarme()
-			
+			ta.stop()
 		elif self.get_argument('cmd')=="start_allarme":									#avvia allarme	
-			ta.__init__()
-			ta.start()
-			
-		
+			if ta.stopped():
+				ta.__init__()
+				ta.start()
 		elif self.get_argument('cmd')=="on_cam":										#accendi cam a bassa risoluzione
 			usb_power.off_cam()
 			time.sleep(1)
@@ -155,12 +160,7 @@ class execute(tornado.web.RequestHandler):
 		elif self.get_argument('cmd')=="off_cam":										#spegni cam
 			tc.stop()
 			tchd.stop()
-			usb_power.off_cam()
-		
-			
-				
-				
-				
+			usb_power.off_cam()	
 		elif self.get_argument('cmd')=="temp_room":										#lettura temperature
 			rm = str(self.get_argument('rm'))
 			di = str(self.get_argument('di'))

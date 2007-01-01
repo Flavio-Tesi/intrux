@@ -10,10 +10,16 @@ ser = serial.Serial(
 )  
 
 def controlla(codice):
-	if codice == [48,49,48,55,52,67,53,68,51,48,50,55] or codice == [48,49,48,55,52,67,54,53,57,55,66,56]:
+	print codice
+	if codice == [48,49,48,55,52,67,53,68,51,48,50,55]:
 		del codice[0:99] 
-		return True
-	del codice[0:99]
+		return "admin"
+	elif codice == [48,49,48,55,52,67,54,53,57,55,66,56]:
+		del codice[0:99] 
+		return "user"
+	else:
+		del codice[0:99]
+		return "unknown"
 
 
 

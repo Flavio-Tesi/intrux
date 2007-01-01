@@ -477,17 +477,15 @@ function start_allarme() {
 	});
 }
 
-
-
 function visualizza_cam(height, width) {
-		testo = "<iframe src=\"http://192.168.1.104:8080/control.htm\" scrolling=\"no\" frameborder=\"0\" align=center	marginheight=\"0px\" marginwidth=\"0px\"";
+		testo = "<iframe src=\"http://192.168.1.104:8181/control.htm\" scrolling=\"no\" frameborder=\"0\" align=center	marginheight=\"0px\" marginwidth=\"0px\"";
 		testo+= "height=\"";
 		testo+=	"640";
 		testo+= "\" width=\"";
 		testo+= "355";
 		testo+= "\"></iframe>";
 		$("#tab_control").html(testo).hide().show();
-		testo = "<iframe src=\"http://192.168.1.104:8080/stream_simple.html\" scrolling=\"no\" frameborder=\"0\" align=center	marginheight=\"0px\" marginwidth=\"0px\"";
+		testo = "<iframe src=\"http://37.116.136.195:8181/stream_simple.html\" scrolling=\"no\" frameborder=\"0\" align=center	marginheight=\"0px\" marginwidth=\"0px\"";
 		testo+= "height=\"";
 		testo+=	height;
 		testo+= "\" width=\"";

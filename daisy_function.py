@@ -88,23 +88,21 @@ def lSala ():
 	db_query.change_light(4)
 	
 def alarm ():
-	for i in range (0,10):
-		lampeggiante.on()
-		time.sleep(0.5)
-		lampeggiante.off()
-		time.sleep(0.5)
-	sirena.on()
-	luceAllarmeAvvenuto.on()
-
+	a = os.popen("python allarme.py &", "r")
+	b = a.read()
+	a.close()
 
 funzioni = [lCamera, lCameretta, lCucina, lSala, alarm]
 
 def stop_allarme ():
+	a = os.popen("pkill -f \"python allarme.py\"", "r")
+	b = a.read()
+	a.close()
 	lampeggiante.off()
 	sirena.off()
 	luceAllarmeAvvenuto.off()
+	time.sleep(2)
 	db_query.stop_intrusion()
-
 
 def luci():
 	if pulsanteLuceCamera.get():
