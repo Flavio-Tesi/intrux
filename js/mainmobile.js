@@ -1,4 +1,3 @@
-
 var light = true;
 var intrusion = true;
 var pwd = true;
@@ -392,7 +391,23 @@ function stop_allarme() {
 	});
 }
 
-
+function visualizza_cam() {
+	
+	var height = $(window).height();
+	var width = $(window).width();
+	
+	if (height > width) alert("ruotare lo schermo!")
+	
+	else {
+		testo = "<iframe src=\"http://192.168.1.104:8080/stream_simple.html\" scrolling=\"auto\" frameborder=\"1\" align=center	marginheight=\"0px\" marginwidth=\"0px\"";
+		testo+= "height=\"";
+		testo+=	height;
+		testo+= "\" width=\"";
+		testo+= width;
+		testo+= "\"></iframe>";
+		$("#frame_cam").html(testo).hide().slideDown();
+	}	
+}
 
 
 $(document).ready(function() {
@@ -403,6 +418,7 @@ $(document).ready(function() {
 	$("#button_log_temperature").click(function(){ query_temproom(); });
 	$("#button_graph_temperature").click(function(){ query_temproomgraph(); });
 	$("#ferma_allarme").click(function(){ stop_allarme(); });
+	$("#realtime").click(function(){ visualizza_cam(); });
 	
 	query_readrooms();
 });

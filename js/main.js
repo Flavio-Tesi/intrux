@@ -4,6 +4,7 @@ var intrusion = true;
 var pwd = true;
 var temp = true;
 var temp2 = true;
+var cam = true;
 
 function query_temproom(){
 	rm = selectroom.value;
@@ -458,7 +459,28 @@ function stop_allarme() {
 	});
 }
 
+function visualizza_cam() {
+	if 
+	
+	var height = $(window).height();
+	var width = $(window).width();
+	
+	if (height > width) alert("ruotare lo schermo!")
+	
+	else {
+		testo = "<iframe src=\"http://192.168.1.104:8080/stream_simple.html\" scrolling=\"auto\" frameborder=\"1\" align=center	marginheight=\"0px\" marginwidth=\"0px\"";
+		testo+= "height=\"";
+		testo+=	height;
+		testo+= "\" width=\"";
+		testo+= width;
+		testo+= "\"></iframe>";
+		$("#frame_cam").html(testo).hide().slideDown();
+	}	
+}
+
+
 $(document).ready(function() {
+	query_readrooms();
     $("#draggable" ).draggable();
     $("#tabs").tabs();
 	$("#readusers_button").click(function(){ query_readusers(); });
@@ -466,6 +488,5 @@ $(document).ready(function() {
 	$("#readlights_button").click(function(){ query_readlights(); });
 	$("#confermaLogin").click(function(){ query_verifyuser(); });
 	$("#ferma_allarme").click(function(){ stop_allarme(); });
-	
-	query_readrooms();
+	$("#read_cam").click(function(){ visualizza_cam(); });
 });
