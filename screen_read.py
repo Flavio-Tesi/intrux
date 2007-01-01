@@ -50,7 +50,7 @@ def set_temperature (ser, index, val):
 pacchetto = ""
 lista = []
 
-while True: 
+def function(): 
 	s = ser.read(1) 
 	if len(s)>0:	
 		pacchetto="".join([pacchetto,s])

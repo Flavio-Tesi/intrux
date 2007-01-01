@@ -366,13 +366,16 @@ function query_verifyuser() {
 		pwd: password
 		},
 		success: function(data) { 
-			if (data == "LOGIN ADMIN") {
+			if (data == "LOGIN ADMIN") {				
 				window.open("/admin.html",false)
 			}
 			else if (data == "LOGIN USER") {
 				window.open("/user.html",false)
 			}
 			else alert(data); 
+			
+			$("#username").val("");
+			$("#password").val("");	
 		}
 	});
 }

@@ -8,14 +8,26 @@ import threading
 import daisy_function
 import time
 
+"""
+import screen_read
+class ThreadScreen(threading.Thread):													#thread per schermo
+	def run(self):
+		while True:
+			screen_read.function()
+			time.sleep(0.5)	
+ts = ThreadScreen()
+ts.daemon = True
+ts.start()
+"""
+
 class ThreadDaisy(threading.Thread):													#thread per pulsanti
 	def run(self):
 		while True:
 			daisy_function.function()
-			time.sleep(1)	
-t = ThreadDaisy()
-t.daemon = True
-t.start()	
+			time.sleep(0.5)	
+td = ThreadDaisy()
+td.daemon = True
+td.start()	
 
 class execute(tornado.web.RequestHandler):
 	def get(self):
