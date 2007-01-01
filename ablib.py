@@ -1469,4 +1469,3 @@ class DS28EA00():
 			
 		p=tString.find("t=")
 		return float(tString[p+2:-1])
-

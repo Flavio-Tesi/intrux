@@ -355,10 +355,34 @@ function query_changelight(i) {
 	});
 }
 
+function query_verifyuser() {
+	username = $("#username").val();
+	password = $("#password").val();
+	$.ajax({
+		url: "/execute",
+		type: "get",
+		data: { cmd: "verify_user",
+		id:  username,
+		pwd: password
+		},
+		success: function(data) { 
+			if (data == "LOGIN ADMIN") {
+				window.open("/admin.html",false)
+			}
+			else if (data == "LOGIN USER") {
+				window.open("/user.html",false)
+			}
+			else alert(data); 
+		}
+	});
+}
+
 $(document).ready(function() {
+    $( "#draggable" ).draggable();
     $("#tabs").tabs();
 	$("#readusers_button").click(function(){ query_readusers(); });
 	$("#readintrusions_button").click(function(){ query_readintrusions(); });
 	$("#readlights_button").click(function(){ query_readlights(); });
+	$("#confermaLogin").click(function(){ query_verifyuser(); });
 	query_readrooms();
 });

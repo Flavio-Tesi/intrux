@@ -4,19 +4,46 @@ import tornado.web
 import json
 import db_query
 import datetime
-import daisy_module
+import threading
+import daisy_function
+import time
+import ablib
+
+class ThreadDaisy(threading.Thread):													#thread per pulsanti
+	def run(self):
+		connector_buttons="D12"
+		button = [
+			ablib.Daisy5(connector_buttons,'P1'),
+			ablib.Daisy5(connector_buttons,'P2'),
+			ablib.Daisy5(connector_buttons,'P3'),
+			ablib.Daisy5(connector_buttons,'P4'),
+			ablib.Daisy5(connector_buttons,'P5'),
+			ablib.Daisy5(connector_buttons,'P6'),
+			ablib.Daisy5(connector_buttons,'P7'),
+			ablib.Daisy5(connector_buttons,'P8'),
+		]
+		for i in range (0,5):
+			button[i].set_edge("rising", daisy_function.funzioni[i])
+
+		button[5].set_edge("rising", daisy_function.funzioni[4])
+		button[6].set_edge("rising", daisy_function.funzioni[4])
+		button[7].set_edge("rising", daisy_function.funzioni[4])
+		while True: 
+			time.sleep(0.1)
+t = ThreadDaisy()
+t.daemon = True
+t.start()	
 
 class execute(tornado.web.RequestHandler):
 	def get(self):
-		if self.get_argument('cmd')=="read_users":
+		if self.get_argument('cmd')=="read_users":										#lettura utenti
 			self.write(json.dumps(db_query.read_users()))
-		elif self.get_argument('cmd')=="read_lights":
+		elif self.get_argument('cmd')=="read_lights":									#lettura luci
 			self.write(json.dumps(db_query.read_lights()))
-		elif self.get_argument('cmd')=="change_light":
+		elif self.get_argument('cmd')=="change_light":									#modifica luci
 			i = int(self.get_argument('id'))
-			daisy_module.P0_rising()
-			db_query.change_light(i)
-		elif self.get_argument('cmd')=="set_usercode":
+			daisy_function.funzioni[i-1]()
+		elif self.get_argument('cmd')=="set_usercode":									#imposta password
 			i = int(self.get_argument('id'))
 			if self.get_argument('pwd0')=='a':
 				self.write("INSERIRE UNA PASSWORD VALIDA")
@@ -28,8 +55,24 @@ class execute(tornado.web.RequestHandler):
 				else:
 					self.write("PASSWORD NON CORRISPONDENTI")
 			else:
-				self.write("PASSWORD ERRATA")
-		elif self.get_argument('cmd')=="temp_room":
+				self.write("PASSWORD ERRATA")	
+		
+		
+		elif self.get_argument('cmd')=="verify_user":									#verifica per login
+			username = str(self.get_argument('id'))
+			password = str(self.get_argument('pwd'))
+			usr = db_query.read_users()
+			if (usr[0][1] == username) & (usr[0][2] == password):
+				self.write ("LOGIN ADMIN")
+			elif (usr[1][1] == username) & (usr[1][2] == password):
+				self.write ("LOGIN USER")
+			else:
+				self.write ("LOGIN FAIL")
+			
+			
+			
+				
+		elif self.get_argument('cmd')=="temp_room":										#lettura temperature
 			rm = str(self.get_argument('rm'))
 			di = str(self.get_argument('di'))
 			df = str(self.get_argument('df'))
@@ -95,15 +138,15 @@ class execute(tornado.web.RequestHandler):
 					a = (i[0], i[1], i[2], str(i[3]), str(i[4]))
 					j.append(a)
 				self.write(json.dumps(j))
-		elif self.get_argument('cmd')=="read_rooms":
-			self.write(json.dumps(db_query.read_rooms()))
-			
+		elif self.get_argument('cmd')=="read_rooms":									#lettura stanze
+			self.write(json.dumps(db_query.read_rooms()))		
 		
 application = tornado.web.Application([
 	(r"/execute", execute),
-	(r"/(.*)", tornado.web.StaticFileHandler, {"path": ".","default_filename": "index.html"}),
+	(r"/(.*)", tornado.web.StaticFileHandler, {"path": ".","default_filename": "login.html"}),
 ])
 
 if __name__ == "__main__":
 	application.listen(80,"0.0.0.0")
 	tornado.ioloop.IOLoop.instance().start()
+	
