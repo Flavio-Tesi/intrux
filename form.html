@@ -1,0 +1,104 @@
+<script>
+	$(document).ready(function(){
+		$("#invia").click(function() {
+			$("#conferma_sorgente").text($("#sorgente").val());
+				sql_query=$("#sorgente").val();
+				$.ajax({
+					url: "/crm/script/gwi.php",
+					type: "post",
+					data: { 
+						cmd: "query",
+						db:  "crm",
+						query: sql_query
+					},
+					success: function(data) {
+						obj = jQuery.parseJSON(data);
+						testo="<table class='basic'>";
+						testo+="<th>";
+						testo+="ID";
+						testo+="</th>";
+						testo+="<th>";
+						testo+="STRINGA";
+						testo+="</th>";
+						testo+="</tr>";
+
+						for (x in obj) {
+							testo+="<tr>";
+							testo+="<td nowrap valign='top'>";
+							testo+=obj[x].id;
+							testo+="</td>";
+							testo+="<td>";
+							testo+=obj[x].stringa;
+							testo+="</td>";
+							testo+="</tr>";
+						}
+						testo+="</table>";
+						$("#risultato").html(testo);
+					}
+				});	
+		});
+
+		$("#esempio1").click(function() {
+			$("#sorgente").text("UPDATE hextostring SET stringa='CIAO' WHERE id='2';SELECT * FROM hextostring");
+		});
+
+});
+</script>
+
+
+Esempi si query SQL:
+<br/>
+<button id="esempio1">Prodotti acquistati da una azienda</button>
+
+
+<textarea id="sorgente"></textarea>
+<br/>
+<button id="invia">Invia</button>
+
+<br/>
+<label>Stringa letta da Javascript</label><br/>	
+<textarea id="conferma_sorgente"></textarea>
+
+<br/>
+<br/>
+
+<br/>
+<div id="risultato">
+</div>
+
+
+<script>
+	//a = "\n\r;,:.àéç";
+	//b=textstring2hexstring(a)
+	//console.log(b);
+	//console.log(hexstring2textstring(b));
+
+	// Converte una stringa di testo in una stringa di testo contenente
+	// numeri esadecimali
+	function textstring2hexstring(textstring) {
+		var hexstring = "";
+		for (var i=0;i<textstring.length;i++)
+			hexstring+=dec2hex(textstring.charCodeAt(i),2);
+		return hexstring;
+	}
+
+	// Converte un numero decimale in uno esadecimale con pad di 0 davanti 
+	function dec2hex(d,pad) {
+		var hex = Number(d).toString(16);
+		pad = typeof (pad) === "undefined" || pad === null ? pad = 2 : pad;
+		while (hex.length < pad) 
+			hex = "0" + hex;
+		return hex;
+	}
+
+	// Converte una stringa di testo di numeri esadecimali in una scringa di testo
+	// numeri esadecimali
+	function hexstring2textstring(hexstring) {
+		var textstring = '';
+		for (var i = 0; i < hexstring.length; i += 2)
+			textstring += String.fromCharCode(parseInt(hexstring.substr(i, 2), 16));
+		return textstring;
+	}
+</script>
+
+
