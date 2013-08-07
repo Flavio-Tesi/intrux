@@ -7,7 +7,7 @@ import datetime
 import threading
 import daisy_function
 import time
-import usb_power
+import comandi_shell
 import rfid
 import send_email
 
@@ -32,6 +32,26 @@ tt.start()
 
 """
 
+class ThreadCompactPics(threading.Thread):												#thread per video cam
+	def run(self):
+		while True:
+			comandi_shell.compact_image()
+			time.sleep(3600)	
+tl = ThreadLuci()
+tl.daemon = True
+tl.start()
+
+class ThreadRecordCam(threading.Thread):												#thread per record cam
+	def __init__(self):
+		super(ThreadRecordCam, self).__init__()
+		self._stop = threading.Event()
+	def stop(self):
+		self._stop.set()
+	def run(self):
+		comandi_shell.on_record()
+trc = ThreadRecordCam()
+trc.daemon = True
+
 class ThreadCam(threading.Thread):														#thread per cam
 	def __init__(self):
 		super(ThreadCam, self).__init__()
@@ -39,7 +59,7 @@ class ThreadCam(threading.Thread):														#thread per cam
 	def stop(self):
 		self._stop.set()
 	def run(self):
-		usb_power.on_cam_640_480()	
+		comandi_shell.on_cam_640_480()	
 tc = ThreadCam()
 tc.daemon = True
 
@@ -50,7 +70,7 @@ class ThreadCamHD(threading.Thread):													#thread per cam
 	def stop(self):
 		self._stop.set()
 	def run(self):
-		usb_power.on_cam_1280_720()
+		comandi_shell.on_cam_1280_720()
 tchd = ThreadCamHD()
 tchd.daemon = True
 
@@ -146,13 +166,13 @@ class execute(tornado.web.RequestHandler):
 				ta.__init__()
 				ta.start()
 		elif self.get_argument('cmd')=="on_cam":										#accendi cam a bassa risoluzione
-			usb_power.off_cam()
+			comandi_shell.off_cam()
 			time.sleep(1)
 			tc.__init__()
 			tc.start()	
 			time.sleep(2)
 		elif self.get_argument('cmd')=="on_cam_hd":										#accendi cam a alta risoluzione
-			usb_power.off_cam()
+			comandi_shell.off_cam()
 			time.sleep(1)
 			tchd.__init__()
 			tchd.start()
@@ -160,7 +180,19 @@ class execute(tornado.web.RequestHandler):
 		elif self.get_argument('cmd')=="off_cam":										#spegni cam
 			tc.stop()
 			tchd.stop()
-			usb_power.off_cam()	
+			comandi_shell.off_cam()	
+		elif self.get_argument('cmd')=="record_video":									#record cam
+			tc.stop()
+			tchd.stop()
+			comandi_shell.off_cam()	
+			trc.__init__()
+			trc.start()
+		elif self.get_argument('cmd')=="stop_record_video":								#stop record cam
+			trc.stop()
+			comandi_shell.off_record()	
+			comandi_shell.convert_video(x)
+		
+		
 		elif self.get_argument('cmd')=="temp_room":										#lettura temperature
 			rm = str(self.get_argument('rm'))
 			di = str(self.get_argument('di'))
@@ -230,12 +262,14 @@ class execute(tornado.web.RequestHandler):
 		elif self.get_argument('cmd')=="read_rooms":									#lettura stanze
 			self.write(json.dumps(db_query.read_rooms()))		
 		
+		
+		
 application = tornado.web.Application([
 	(r"/execute", execute),
 	(r"/(.*)", tornado.web.StaticFileHandler, {"path": ".","default_filename": "login.html"}),
 ])
 
 if __name__ == "__main__":
-	application.listen(80,"0.0.0.0")
+	application.listen(81,"0.0.0.0")
 	tornado.ioloop.IOLoop.instance().start()
 	

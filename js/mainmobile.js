@@ -3,6 +3,7 @@ var intrusion = true;
 var pwd = true;
 var temp = true;
 var temp2 = true;
+var cam = "";
 
 function query_temproom(){
 	rm = selectroom.value;
@@ -413,6 +414,7 @@ function on_cam() {
 			type: "get",
 			data: { cmd: "on_cam" },
 			success: function(data) { 
+				cam = "lq"
 				visualizza_cam(480, 640);
 			}
 		});
@@ -429,6 +431,7 @@ function on_cam_hd() {
 			type: "get",
 			data: { cmd: "on_cam_hd" },
 			success: function(data) { 
+				cam = "hd"
 				visualizza_cam(720, 1280);
 			}
 		});
@@ -447,24 +450,51 @@ function off_cam(){
 }
 	
 function visualizza_cam(height, width) {
-		testo = "<iframe src=\"http://37.116.136.195:8181/stream_simple.html\" scrolling=\"auto\" frameborder=\"1\" align=center	marginheight=\"0px\" marginwidth=\"0px\"";
+		testo = "<div><button id=\"record\">registra</button></div>"
+		testo+= "<iframe src=\"http://192.168.1.104:8181/stream_simple.html\" scrolling=\"auto\" frameborder=\"1\" align=center	marginheight=\"0px\" marginwidth=\"0px\"";
 		testo+= "height=\"";
 		testo+=	height;
 		testo+= "\" width=\"";
 		testo+= width;
 		testo+= "\"></iframe>";
 		$("#frame_cam").html(testo).hide().slideDown();
+		$("#record").click(function(){ registra(); });
 }
 
-function video() {
+function registra() {
 	$.ajax({
 		url: "/execute",
 		type: "get",
-		data: { cmd: "visualizza video" },
+		data: { cmd: "record_video" },
 		success: function(data) {
-			alert ("allarme avviato");
-		 }
-	});	
+			testo = "<div><button id=\"stop_record\">ferma la registrazione</button></div>"
+			$("#frame_cam").html(testo).hide().slideDown();
+			$("#stop_record").click(function(){ stop_registrazione(); });
+		}
+	});
+}
+
+function stop_registrazione() {
+	$.ajax({
+		url: "/execute",
+		type: "get",
+		data: { cmd: "stop_record_video" },
+		success: function(data) {
+			console.log (cam);
+			if (cam == "lq") on_cam();
+			else if (cam == "hd") on_cam_hd();
+		}
+	});
+}
+
+function video() {	
+	testo = "<iframe src=\"http://192.168.1.104/video\" scrolling=\"auto\" frameborder=\"1\" align=center	marginheight=\"0px\" marginwidth=\"0px\"";
+	testo+= "height=\"";
+	testo+=	640;
+	testo+= "\" width=\"";
+	testo+= 1200;
+	testo+= "\"></iframe>";
+	$("#directory").html(testo).hide().slideDown();
 }
 
 $(document).ready(function() {
