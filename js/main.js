@@ -378,6 +378,7 @@ function DetectUagent(name) {
 		return false;
 }
 
+
 function query_verifyuser() {
 	username = $("#username").val();
 	password = $("#password").val();
@@ -393,10 +394,14 @@ function query_verifyuser() {
 				if (IsSmartphone()) {
 					window.location = "/adminmobile.html";
 				}
-				else window.location = "/admin.html";
+				else {
+					window.location = "/admin.html";
+					document.cookie = "nome_autenticazione=admin";
+				}
 			}
 			else if (data == "LOGIN USER") {
 				window.location = "/user.html";
+				document.cookie = "nome_autenticazione=user";
 			}
 			else alert(data); 
 			
@@ -536,6 +541,10 @@ function off_cam(){
 	});
 }
 
+function logout() {
+	window.location = "/login.html";
+	document.cookie = "nome_autenticazione=";
+}
 
 $(document).ready(function() {
 	query_readrooms();
@@ -552,5 +561,6 @@ $(document).ready(function() {
 	$("#on_cam").click(function(){ on_cam(); });
 	$("#on_cam_hd").click(function(){ on_cam_hd(); });
 	$("#off_cam").click(function(){ off_cam(); });
+	$("#logout").click(function(){ logout(); });
 	
 });

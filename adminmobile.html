@@ -20,9 +20,19 @@
 
 <body>
 	
+	<script type="text/javascript">
+		var i = document.cookie.indexOf("nome_autenticazione=") +1 + "nome_autenticazione".length;
+		var f = document.cookie.indexOf(";",i);
+		if (f == -1) f = document.cookie.length;
+		var auth = document.cookie.substring(i,f);
+		
+		if (auth != "admin") window.location = "/login.html";
+	</script>
+	
 <div data-role="page" id="home" data-fullscreen="true">
 	<div data-role="content">
 		Benvenuti nel sistema di telesorveglianza INTRUX
+		<button id="logout">LOGOUT</button>
 		<ul data-role="listview">
 		<li><a href="#utenti">Utenti</a></li>
 		<li><a href="#intrusioni">Intrusioni</a></li>
@@ -30,6 +40,7 @@
 		<li><a href="#luci">Luci</a></li>
 		<li><a href="#realtime">Realtime</a></li>
 		<li><a href="#video">Video</a></li>
+		
 	</ul>
 	</div>	
 </div>
@@ -110,8 +121,6 @@
     </div>
     <div id = "directory"></div>
 </div>
-	
-
 	
 	
 </body>

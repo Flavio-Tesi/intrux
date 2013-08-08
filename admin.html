@@ -17,6 +17,17 @@
 </head>
 
 <body>
+
+	<script type="text/javascript">
+		var i = document.cookie.indexOf("nome_autenticazione=") +1 + "nome_autenticazione".length;
+		var f = document.cookie.indexOf(";",i);
+		if (f == -1) f = document.cookie.length;
+		var auth = document.cookie.substring(i,f);
+		
+		if (auth != "admin") window.location = "/login.html";
+	</script>
+
+	
 	<div id="tabs">
 	  <ul>
 		<li><a href="#tabs-1">Utenti</a></li>
@@ -24,6 +35,7 @@
 		<li><a href="#tabs-3">Temperature</a></li>
 		<li><a href="#tabs-4">Luci</a></li>
 		<li><a href="#tabs-5">Realtime</a></li>
+		<li><a href="#tabs-6">Logout</a></li>
 	  </ul>
 	  <div id="tabs-1">
 			<button id="readusers_button">mostra utenti</button>
@@ -59,8 +71,9 @@
 				<div style="clear:both;"></div>
 			</div>
 	  </div>
-	  
-	  
-</div>
+	  <div id="tabs-6">
+			<button id="logout">LOGOUT</button>
+	  </div>
+</div>	
 </body>
 </html>

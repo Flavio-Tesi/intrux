@@ -29,17 +29,21 @@ class ThreadTemp(threading.Thread):														#thread per log temperature
 tt = ThreadTemp()
 tt.daemon = True
 tt.start()
-
 """
 
+
 class ThreadCompactPics(threading.Thread):												#thread per video cam
+	def __init__(self):
+		super(ThreadCompactPics, self).__init__()
+		self._stop = threading.Event()
+	def stop(self):
+		self._stop.set()
 	def run(self):
-		while True:
-			comandi_shell.compact_image()
-			time.sleep(3600)	
-tl = ThreadLuci()
-tl.daemon = True
-tl.start()
+		while not(self.stopped()):
+			time.sleep(60)	
+			comandi_shell.images2video()
+tcp = ThreadCompactPics()
+tcp.daemon = True
 
 class ThreadRecordCam(threading.Thread):												#thread per record cam
 	def __init__(self):
@@ -181,6 +185,7 @@ class execute(tornado.web.RequestHandler):
 			tc.stop()
 			tchd.stop()
 			comandi_shell.off_cam()	
+			tcp.stop()
 		elif self.get_argument('cmd')=="record_video":									#record cam
 			tc.stop()
 			tchd.stop()
@@ -189,8 +194,7 @@ class execute(tornado.web.RequestHandler):
 			trc.start()
 		elif self.get_argument('cmd')=="stop_record_video":								#stop record cam
 			trc.stop()
-			comandi_shell.off_record()	
-			comandi_shell.convert_video(x)
+			comandi_shell.off_record()
 		
 		
 		elif self.get_argument('cmd')=="temp_room":										#lettura temperature

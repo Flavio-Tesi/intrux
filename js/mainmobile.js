@@ -408,7 +408,6 @@ function on_cam() {
 	w = $(window).width();
 	if (h > w) alert("ruotare lo schermo!")
 	else {
-		
 		$.ajax({
 			url: "/execute",
 			type: "get",
@@ -497,6 +496,11 @@ function video() {
 	$("#directory").html(testo).hide().slideDown();
 }
 
+function logout() {
+	window.location = "/login.html";
+	document.cookie = "nome_autenticazione=";
+}
+
 $(document).ready(function() {
 	$("#utenti").click(function(){ query_readusers(); });
 	$("#intrusioni").click(function(){ query_readintrusions(); });
@@ -510,6 +514,6 @@ $(document).ready(function() {
 	$("#on_cam_hd").click(function(){ on_cam_hd(); });
 	$("#off_cam").click(function(){ off_cam(); });
 	$("#video").click(function(){ video(); });
-	
+	$("#logout").click(function(){ logout(); });
 	query_readrooms();
 });
