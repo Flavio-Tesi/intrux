@@ -19,6 +19,7 @@ luceSala =				ablib.Daisy8(connector=conn11,id=out1,position=pos2)
 sirena =				ablib.Daisy8(connector=conn12,id=out0,position=pos1)
 lampeggiante = 			ablib.Daisy8(connector=conn12,id=out1,position=pos1)
 luceAllarmeAvvenuto =	ablib.Daisy8(connector=conn12,id=out0,position=pos2)
+luceAllarmeAttivato = 	ablib.Daisy8(connector=conn12,id=out1,position=pos2)
 
 pulsanteLuceCamera = 	ablib.Daisy8(connector=conn11,id=in0,position=pos1)
 pulsanteLuceCameretta = ablib.Daisy8(connector=conn11,id=in1,position=pos1)
@@ -103,6 +104,12 @@ def stop_allarme ():
 	luceAllarmeAvvenuto.off()
 	time.sleep(2)
 	db_query.stop_intrusion()
+	
+def luce_allarme_attivato():
+	luceAllarmeAttivato.on()
+	
+def luce_allarme_disattivato():
+	luceAllarmeAttivato.off()
 
 def luci():
 	if pulsanteLuceCamera.get():
