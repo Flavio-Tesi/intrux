@@ -106,8 +106,8 @@ tl.start()
 class ThreadRFID(threading.Thread):														#thread per rfid
 	def run(self):
 		while True:
-			if rfid.function() == "admin": 
-				print ta.stopped()
+			x = rfid.function()
+			if x == "admin": 
 				if ta.stopped():
 					ta.__init__()
 					ta.start()
@@ -116,8 +116,7 @@ class ThreadRFID(threading.Thread):														#thread per rfid
 					daisy_function.stop_allarme()
 					ta.stop()
 					daisy_function.luce_allarme_disattivato()
-			if (rfid.function() == "user"):
-				print ta.stopped()
+			if x == "user":
 				if ta.stopped():
 					ta.__init__()
 					ta.start()
@@ -126,7 +125,7 @@ class ThreadRFID(threading.Thread):														#thread per rfid
 					daisy_function.stop_allarme()
 					ta.stop()
 					daisy_function.luce_allarme_disattivato()
-#					send_email.invia_email_rfid_utente()
+					send_email.invia_email_rfid_utente()
 tr = ThreadRFID()
 tr.daemon = True
 tr.start()

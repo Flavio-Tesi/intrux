@@ -9,6 +9,8 @@ ser = serial.Serial(
     bytesize=serial.EIGHTBITS
 )  
 
+codice = []
+
 def controlla(codice):
 	print codice
 	if codice == [48,49,48,55,52,67,53,68,51,48,50,55]:
@@ -21,17 +23,9 @@ def controlla(codice):
 		del codice[0:99]
 		return "unknown"
 
-
-
-
-
-
-
-codice = []
-
 def function():
 	s = ser.read(1)
 	if (len(s)>0 and ord(s)!=0x02 and ord(s)!=0x03 and ord(s)!=0x0D and ord(s)!=0x0A):	
 		codice.append (ord(s))
-	if len(codice)==12:
-		return controlla(codice)
+		if len(codice)==12:
+			return controlla(codice)
