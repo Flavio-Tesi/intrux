@@ -70,7 +70,7 @@ def read_logTempRD(id_room, dat):
 	return cur.fetchall()
 	
 def set_temperature(id_room, val, dat, ora):
-	cur.execute ("INSERT INTO temperatures (id_room, val, dat, dattime) VALUES, (%d, %d, %s, %s);" %(id_room, val, dat, ora))
+	cur.execute ("INSERT INTO temperatures (id_room, val, dat, ora) VALUES (%d, %d, '%s', '%s');" %(id_room, val, dat, ora))
 	db.commit()
 
 def read_intrusions():
@@ -84,17 +84,9 @@ def read_intrusion(i):
 def read_logIntrRoom(id_room):
 	cur.execute("SELECT * FROM intrusions WHERE id_room=%d;" %id_room)
 	return cur.fetchall()
-
-def read_logIntrData(dat):
-	cur.execute("SELECT * FROM intrusions WHERE dat=%Y-%m-%d;" %dat)
-	return cur.fetchall()
 	
-def read_logIntrRD(id_room, dat):
-	cur.execute("SELECT * FROM intrusions WHERE dat=%Y%m%d && id_room=%d;" %(dat, id_room))
-	return cur.fetchall()
-	
-def set_intrusion(id_room, status, dat, dattime):
-	cur.execute ("INSERT INTO intrusions (id_room, status, dat, dattime) VALUES, (%d, %d, %Y%m%d, %Y%m%d %H:%M:%S);" %(id_room, status, dat, dattime))
+def set_intrusion(id_room, status):
+	cur.execute ("INSERT INTO intrusions (id_room, status) VALUES (%d, %d);" %(id_room, status))
 	db.commit()
 
 def change_intrusion(i):

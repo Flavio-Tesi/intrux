@@ -7,13 +7,8 @@
 <script type="text/javascript" src="js/jquery-1.10.2.min.js"></script> 
 <script type="text/javascript" src="js/jquery-ui-1.10.3.custom.min.js"></script> 
 <script type="text/javascript" src="js/main.js"></script>
-<script src="RGraph/libraries/RGraph.common.core.js" ></script>
-<script src="RGraph/libraries/RGraph.common.effects.js" ></script>
-<script src="RGraph/libraries/RGraph.common.dynamic.js" ></script>
-<script src="RGraph/libraries/RGraph.line.js" ></script>
-<script src="RGraph/libraries/RGraph.common.tooltips.js" ></script>
-<script src="RGraph/libraries/RGraph.common.key.js" ></script>
-<script src="RGraph/libraries/RGraph.drawing.yaxis.js" ></script>
+<script src="Highcharts/js/highcharts.js"></script>
+<script src="Highcharts/js/modules/exporting.js"></script>
 </head>
 
 <body>
@@ -48,15 +43,19 @@
 			<button id="avvia_allarme">avvia allarme</button>
 			<p id="tab_intrusioni"></p>
 	  </div>
+	  
+	  
+	  
+	  
 	  <div id="tabs-3">
 			<p id="tab_temperature"></p>
-			<p id="tab_log_temperature">
-				<div>
-					<canvas id="grafico" width="1500" height="250"></canvas>
-				</div>
-			
-			</p>
+			<p id="tab_log_temperature"></p>
+			<div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
 	  </div>
+	  
+	  
+	  
+	  
 	  <div id="tabs-4">
 			<button id="readlights_button">mostra luci</button>
 			<p id="tab_luci"></p>

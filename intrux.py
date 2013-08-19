@@ -2,11 +2,11 @@ import tornado.httpserver
 import tornado.ioloop
 import tornado.web
 import json
-import db_query
 import datetime
-import threading
-import daisy_function
 import time
+import threading
+import db_query
+import daisy_function
 import comandi_shell
 import rfid
 import send_email
@@ -21,16 +21,21 @@ class ThreadScreen(threading.Thread):													#thread per schermo
 ts = ThreadScreen()
 ts.daemon = True
 ts.start()
+"""
 
 class ThreadTemp(threading.Thread):														#thread per log temperature
 	def run(self):
 		while True:
+			x = datetime.datetime.now()
+			id_room = 1
+			val = int(comandi_shell.leggi_temperatura())
+			dat = datetime.datetime.strftime(x,"%Y-%m-%d")
+			ora = datetime.datetime.strftime(x,"%H:%M:%S")
+			db_query.set_temperature(id_room, val, dat, ora)
 			time.sleep(1800)
 tt = ThreadTemp()
 tt.daemon = True
 tt.start()
-"""
-
 
 class ThreadCompactPics(threading.Thread):												#thread per video cam
 	def __init__(self):
@@ -125,7 +130,9 @@ class ThreadRFID(threading.Thread):														#thread per rfid
 					daisy_function.stop_allarme()
 					ta.stop()
 					daisy_function.luce_allarme_disattivato()
-					send_email.invia_email_rfid_utente()
+					orario = datetime.datetime.strftime(datetime.datetime.now(),"%H:%M")
+					if not((orario > '10:00') & (orario < '21:00')):
+						send_email.invia_email_rfid_utente()
 tr = ThreadRFID()
 tr.daemon = True
 tr.start()

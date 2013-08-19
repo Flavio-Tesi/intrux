@@ -31,6 +31,35 @@ def on_record():
 	a = os.popen(testo, "r")
 	b = a.read()
 	a.close()
+	
+def off_record():
+	a = os.popen("pkill -f \"avconv\"", "r")
+	b = a.read()
+	a.close()
+		 
+def on_hotspot():
+	os.chdir("/root/")
+	a = os.popen("hostapd hostapd.conf &", "r")
+	os.chdir("/root/intrux/")
+	b = a.read()
+	a.close()
+	os.chdir("/root/intrux/")
+	
+def off_hotspot():
+	a = os.popen("pkill -f \"hostapd hostapd.conf\"", "r")
+	b = a.read()
+	a.close()
+
+def leggi_temperatura():
+	f = open('/sys/bus/w1/devices/28-000003dcbf67/w1_slave')
+	line = f.readline()
+	line = f.readline()
+	f.close()
+	return line[29:31]
+
+
+
+"""
 
 
 def images2video():
@@ -57,39 +86,12 @@ def images2video():
 	b = a.read()
 	a.close()
 	
-	
-def off_record():
-	a = os.popen("pkill -f \"avconv\"", "r")
-	b = a.read()
-	a.close()
-		 
-def on_hotspot():
-	os.chdir("/root/")
-	a = os.popen("hostapd hostapd.conf &", "r")
-	os.chdir("/root/intrux/")
-	b = a.read()
-	a.close()
-	os.chdir("/root/intrux/")
-	
-def off_hotspot():
-	a = os.popen("pkill -f \"hostapd hostapd.conf\"", "r")
-	b = a.read()
-	a.close()
 
 def leggi_directory_video():
 	a = os.popen("ls -la | grep '^d'", "r")
 	b = a.read()
 	a.close()
 	return b
-	
-	
-	
-	
-
-
-
-
-"""
 
 
 

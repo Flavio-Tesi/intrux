@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS `temperatures` (
   FOREIGN KEY (id_room) REFERENCES rooms (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-/*LOCK TABLES `users` WRITE;*/
+/*LOCK TABLES `users` WRITE; */
 
 INSERT INTO temperatures (id_room, val, dat, ora) 
 VALUES 
@@ -114,6 +114,6 @@ VALUES
 ('4','15','2013-05-08', '11:45:33'), 
 ('4','16','2013-05-08', '12:20:25'), 
 ('4','17','2013-05-08', '15:09:29'), 
-('4','30','2013-05-08', '17:08:02');
+('4','30','2013-05-08', '17:08:02'); 
 
 UNLOCK TABLES;
