@@ -37,19 +37,6 @@ tt = ThreadTemp()
 tt.daemon = True
 tt.start()
 
-class ThreadCompactPics(threading.Thread):												#thread per video cam
-	def __init__(self):
-		super(ThreadCompactPics, self).__init__()
-		self._stop = threading.Event()
-	def stop(self):
-		self._stop.set()
-	def run(self):
-		while not(self.stopped()):
-			time.sleep(60)	
-			comandi_shell.images2video()
-tcp = ThreadCompactPics()
-tcp.daemon = True
-
 class ThreadRecordCam(threading.Thread):												#thread per record cam
 	def __init__(self):
 		super(ThreadRecordCam, self).__init__()
@@ -101,8 +88,28 @@ ta.stop()
 
 class ThreadLuci(threading.Thread):														#thread per luci
 	def run(self):
+		a = True
+		b = True
+		c = True
+		d = True
 		while True:
-			daisy_function.luci()
+			x = daisy_function.luci(a,b,c,d)
+			if x == "10":
+				a = False
+			elif x == "11":
+				a = True
+			if x == "20":
+				b = False
+			elif x == "21":
+				b = True
+			if x == "30":
+				c = False
+			elif x == "31":
+				c = True
+			if x == "40":
+				d = False
+			elif x == "41":
+				d = True		
 			time.sleep(0.1)	
 tl = ThreadLuci()
 tl.daemon = True

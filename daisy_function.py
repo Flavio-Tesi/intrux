@@ -111,15 +111,59 @@ def luce_allarme_attivato():
 def luce_allarme_disattivato():
 	luceAllarmeAttivato.off()
 
-def luci():
-	if pulsanteLuceCamera.get():
-		lCamera()
-	if pulsanteLuceCameretta.get():
-		lCameretta()
-	if pulsanteLuceCucina.get():
-		lCucina()
-	if pulsanteLuceSala.get():
-		lSala()
+def luci(a,b,c,d):
+
+	if a==False:
+		if pulsanteLuceCamera.get()==False:
+			return "11"
+	if a==True and pulsanteLuceCamera.get()==True:
+		if lights[0]==False:
+			luceCamera.on()
+			lights[0]=True
+		else:
+			luceCamera.off()
+			lights[0]=False
+		db_query.change_light(1)
+		return "10"
+		
+	if b==False:
+		if pulsanteLuceCameretta.get()==False:
+			return "21"
+	if b==True and pulsanteLuceCameretta.get()==True:
+		if lights[1]==False:
+			luceCameretta.on()
+			lights[1]=True
+		else:
+			luceCameretta.off()
+			lights[1]=False
+		db_query.change_light(2)
+		return "20"
+		
+	if c==False:
+		if pulsanteLuceCucina.get()==False:
+			return "31"
+	if c==True and pulsanteLuceCucina.get()==True:
+		if lights[2]==False:
+			luceCucina.on()
+			lights[2]=True
+		else:
+			luceCucina.off()
+			lights[2]=False
+		db_query.change_light(3)
+		return "30"	
+	
+	if d==False:
+		if pulsanteLuceSala.get()==False:
+			return "41"
+	if d==True and pulsanteLuceSala.get()==True:
+		if lights[3]==False:
+			luceSala.on()
+			lights[3]=True
+		else:
+			luceSala.off()
+			lights[3]=False
+		db_query.change_light(4)
+		return "40"
 
 def allarme():
 	if intrusioneCamera.get():
