@@ -9,13 +9,8 @@
 	<script type="text/javascript" src="js/mainmobile.js"></script>
 	<link rel="apple-touch-icon" href="/css/mobile/images/Gnu_meditate_levitate.png" />
 	<meta content="width=device-width initial-scale=1.0 maximum-scale=1.0   user-scalable=0" name="viewport">
-	<script src="RGraph/libraries/RGraph.common.core.js" ></script>
-	<script src="RGraph/libraries/RGraph.common.effects.js" ></script>
-	<script src="RGraph/libraries/RGraph.common.dynamic.js" ></script>
-	<script src="RGraph/libraries/RGraph.line.js" ></script>
-	<script src="RGraph/libraries/RGraph.common.tooltips.js" ></script>
-	<script src="RGraph/libraries/RGraph.common.key.js" ></script>
-	<script src="RGraph/libraries/RGraph.drawing.yaxis.js" ></script>
+	<script src="Highcharts/js/highcharts.js"></script>
+	<script src="Highcharts/js/modules/exporting.js"></script>
 </head>
 
 <body>
@@ -83,9 +78,7 @@
     <div data-role="collapsible">
 		<h3 id="button_graph_temperature">Mostra grafico temperature</h3>
     </div>
-    <div id="graph_temperature">
-		<canvas id="grafico" width="1500" height="250"></canvas>
-    </div>
+    <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
 </div>
 
 

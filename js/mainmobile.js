@@ -80,38 +80,27 @@ function query_temproomgraph() {
 		success: function (data) {
 			if (!temp2) {
 				temp2 = !temp2
-				var canvas = document.getElementById('grafico');
-				var ctx = canvas.getContext('2d');
-				ctx.clearRect(0, 0, canvas.width, canvas.height);
-		//		canvas.width = canvas.width;
-		//		i = ctx.createImageData(canvas.width, canvas.height);
-		//		ctx.putImageData(i, 0, 0);
-				ctx.beginPath();
+				document.getElementById("container").innerHTML = "";
 
 			}
 			else if (data == "INSERIRE UNA DATA DI INIZIO" || data == "INSERIRE UNA DATA DI FINE") alert(data);
 			else {
 				
-				
-				
 				obj = jQuery.parseJSON(data);
+				console.log (obj[0]);
 				var j = 0;
 				
-				for (x in obj) if (obj[x][1]>j) j =obj[x][1];
+				for (x in obj) if (obj[x][1]>j) j = obj[x][1];
 				
-				var colors = new Array (["black"], ["blue"], ["red"], ["green"], ["orange"], ["light blue"], ["brown"], ["yellow"], ["pink"], ["violet"]);
 				var array = new Array();
-				var asseY = new Array();
-				var asseX = new Array();
+				var temperature = new Array();
 				var	tooltips = new Array();
-				var keys = new Array();
 				var i;
 				
 				for (k=0; k<j; k++) {
 					i = 0;
 					array[k] = new Array();
-					asseY[k] = new Array();
-					asseX[k] = new Array();
+					temperature[k] = new Array();
 					tooltips[k] = new Array();
 					for (x in obj) {
 						if (obj[x][1] == k+1) {
@@ -123,47 +112,61 @@ function query_temproomgraph() {
 				
 				
 				for (k=0; k<j; k++) {
-					if (typeof(array[k][0])!="undefined") {
-						var i = k+1;
-						keys[k]= ["stanza numero " + i];
-					}
 					for (z=0; z<array[k].length; z++) {
-						asseY[k][z]=array[k][z][2];
-						asseX[k][z]=array[k][z][3];
-						tooltips[k][z]=(array[k][z][2]).toString() +" gradi, il giorno "+ (array[k][z][3]).toString() +", alle ore "+ (array[k][z][4]).toString();
+						temperature[k][z]=array[k][z][2];
+						tooltips[k][z]=(array[k][z][3]).toString() + "<br/>" + (array[k][z][4]).toString();
 						
 					}
 				}
 				
-				var max = 100;
 								
-				for (k=0; k<j; k++) { 									
-					var graphTemp = new RGraph.Line('grafico', asseY[k]);
-					graphTemp.Set('ylabels', false);
-					graphTemp.Set('background.grid', true);
-					graphTemp.Set('colors', colors[k]);
-					graphTemp.Set('linewidth', 5);
-					graphTemp.Set('hmargin', 5);
-					graphTemp.Set('labels', asseX[k]);
-					graphTemp.Set('tooltips', tooltips[k]);
-					graphTemp.Set('tooltips.event', 'onmousemove');
-					graphTemp.Set('chart.key', keys[k]);
-					graphTemp.Set('chart.key.position', 'gutter');
-					graphTemp.Set('chart.key.position.gutter.boxed', false);
-					graphTemp.Set('chart.key.position.x', ((graphTemp.canvas.width - 115 + 250*k) / 2) - 25);
-					
-					graphTemp.Draw();
-			//		RGraph.Effects.Line.Trace2(graphTemp);
-					
-					if (typeof(array[k][0])!="undefined") {
-						var yaxis = new RGraph.Drawing.YAxis('grafico', 20*(k+1));
-						yaxis.Set('colors', colors[k]);
-						yaxis.Set('text.color', 'black');
-						yaxis.Set('chart.max', max);
-						yaxis.Draw();
-					}
-				}
+								
+				$(function () {
+						$('#container').highcharts({
+							title: {
+								text: 'Temperature',
+								x: -20 //center
+							},
+							xAxis: {
+								categories: tooltips[0]
+							},
+							yAxis: {
+								title: {
+									text: 'Gradi Celsius'
+								},
+								plotLines: [{
+									value: 0,
+									width: 1,
+									color: '#808080'
+								}]
+							},
+							tooltip: {
+								formatter: function() {
+									return Highcharts.numberFormat(this.y, 0) + "gradi" + '<br/>'+'in data: '+ this.x;
+								}
 
+							},
+							legend: {
+								layout: 'vertical',
+								align: 'right',
+								verticalAlign: 'middle',
+								borderWidth: 0
+							},
+							series: [{
+								name: 'Camera',
+								data: temperature[0]
+							}, {
+								name: 'Cameretta',
+								data: temperature[1]
+							}, {
+								name: 'Cucina',
+								data: temperature[2]
+							}, {
+								name: 'Sala',
+								data: temperature[3]
+							}]
+						});
+					});
 				
 				temp2 = !temp2;
 			}

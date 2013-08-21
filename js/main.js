@@ -84,12 +84,11 @@ function query_temproomgraph() {
 			if (!temp2) {
 				temp2 = !temp2
 				temp = true;
-				RGraph.Clear(document.getElementById("grafico"));
+				document.getElementById("container").innerHTML = "";
 
 			}
 			else if (data == "INSERIRE UNA DATA DI INIZIO" || data == "INSERIRE UNA DATA DI FINE") alert(data);
 			else {
-				
 				
 				
 				obj = jQuery.parseJSON(data);
@@ -173,25 +172,6 @@ function query_temproomgraph() {
 							}]
 						});
 					});
-					
-
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-
 				
 				temp2 = !temp2;
 				temp = true;
