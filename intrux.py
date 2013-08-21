@@ -210,9 +210,22 @@ class execute(tornado.web.RequestHandler):
 			trc.__init__()
 			trc.start()
 		elif self.get_argument('cmd')=="stop_record_video":								#stop record cam
+			print "213"
+			print "214"
+			print "215"
+			print "216"
+			print "217"
 			trc.stop()
+			print "219"
+			print "220"
+			print "221"
+			print "222"
+			print "223"
 			comandi_shell.off_record()
-		
+			print "225"
+			print "226"
+			
+
 		
 		elif self.get_argument('cmd')=="temp_room":										#lettura temperature
 			rm = str(self.get_argument('rm'))

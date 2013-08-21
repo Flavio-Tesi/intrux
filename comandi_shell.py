@@ -25,14 +25,18 @@ def off_cam():
 	a.close()
 	
 def on_record():
+	x = datetime.datetime.now()
 	testo = "avconv -an -f video4linux2 -s 320x240  -r 15 -i /dev/video0 -f mp4 /var/www/video/"
-	testo+= str(datetime.datetime.now())[0:10]+"_"+(str(datetime.datetime.now())[11:19])
+	testo+= str(x)[0:10]+"_"+(str(x)[11:19])
 	testo+=".mp4"
 	a = os.popen(testo, "r")
 	b = a.read()
 	a.close()
 	
 def off_record():
+	a = os.popen("pkill -f \"avconv\"", "r")
+	b = a.read()
+	a.close()
 	a = os.popen("pkill -f \"avconv\"", "r")
 	b = a.read()
 	a.close()
