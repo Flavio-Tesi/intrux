@@ -8,8 +8,8 @@ out1 = 'RL1'
 pos1 = 'first'
 pos2 = 'second'
 
-sirena =				ablib.Daisy8(connector=conn12,id=out0,position=pos1)
-lampeggiante = 			ablib.Daisy8(connector=conn12,id=out1,position=pos1)
+lampeggiante = 			ablib.Daisy8(connector=conn12,id=out0,position=pos1)
+sirena =				ablib.Daisy8(connector=conn12,id=out1,position=pos1)
 luceAllarmeAvvenuto =	ablib.Daisy8(connector=conn12,id=out0,position=pos2)
 
 

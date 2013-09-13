@@ -87,7 +87,6 @@ function query_temproomgraph() {
 			else {
 				
 				obj = jQuery.parseJSON(data);
-				console.log (obj[0]);
 				var j = 0;
 				
 				for (x in obj) if (obj[x][1]>j) j = obj[x][1];
@@ -482,7 +481,6 @@ function stop_registrazione() {
 		type: "get",
 		data: { cmd: "stop_record_video" },
 		success: function(data) {
-			console.log (cam);
 			if (cam == "lq") on_cam();
 			else if (cam == "hd") on_cam_hd();
 		}

@@ -16,8 +16,8 @@ luceCamera =			ablib.Daisy8(connector=conn11,id=out0,position=pos1)
 luceCameretta =			ablib.Daisy8(connector=conn11,id=out1,position=pos1)
 luceCucina =			ablib.Daisy8(connector=conn11,id=out0,position=pos2)
 luceSala =				ablib.Daisy8(connector=conn11,id=out1,position=pos2)
-sirena =				ablib.Daisy8(connector=conn12,id=out0,position=pos1)
-lampeggiante = 			ablib.Daisy8(connector=conn12,id=out1,position=pos1)
+lampeggiante = 			ablib.Daisy8(connector=conn12,id=out0,position=pos1)
+sirena =				ablib.Daisy8(connector=conn12,id=out1,position=pos1)
 luceAllarmeAvvenuto =	ablib.Daisy8(connector=conn12,id=out0,position=pos2)
 luceAllarmeAttivato = 	ablib.Daisy8(connector=conn12,id=out1,position=pos2)
 
@@ -165,16 +165,24 @@ def luci(a,b,c,d):
 		db_query.change_light(4)
 		return "40"
 
-def allarme():
-	if intrusioneCamera.get():
-		alarm()
-		db_query.is_intrusion(1)
-	if intrusioneCameretta.get():
-		alarm()
-		db_query.is_intrusion(2)
-	if intrusioneCucina.get():
-		alarm()
-		db_query.is_intrusion(3)
-	if intrusioneSala.get():
-		alarm()
-		db_query.is_intrusion(4)
+def allarme(allarm):
+	if (not intrusioneCamera.get()):
+		if allarm == "disattivato":
+			alarm()
+			db_query.is_intrusion(1)
+			return "ALLARME"
+	if (not intrusioneCameretta.get()):
+		if allarm == "disattivato":
+			alarm()
+			db_query.is_intrusion(2)
+			return "ALLARME"
+	if (not intrusioneCucina.get()):
+		if allarm == "disattivato":
+			alarm()
+			db_query.is_intrusion(3)
+			return "ALLARME"
+	if (not intrusioneSala.get()):
+		if allarm == "disattivato":
+			alarm()
+			db_query.is_intrusion(4)
+			return "ALLARME"

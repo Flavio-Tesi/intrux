@@ -92,7 +92,6 @@ function query_temproomgraph() {
 				
 				
 				obj = jQuery.parseJSON(data);
-				console.log (obj[0]);
 				var j = 0;
 				
 				for (x in obj) if (obj[x][1]>j) j = obj[x][1];

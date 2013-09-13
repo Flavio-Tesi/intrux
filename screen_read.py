@@ -1,15 +1,13 @@
 import serial
-import db_query
  
-ser = serial.Serial(
+ser2 = serial.Serial(
     port='/dev/ttyS4', 
     baudrate=9600, 
-    timeout=0.1,
+    timeout=1,
     parity=serial.PARITY_NONE,
     stopbits=serial.STOPBITS_ONE,
     bytesize=serial.EIGHTBITS
-)  
-
+)    
 
 
 def goto_form (index):
@@ -20,7 +18,7 @@ def goto_form (index):
 		ls1 = calcola_checksum(ls1, lista[i])
 	lista.append(ls1)
 	for i in range (0, len(lista)):
-		ser.write(lista[i])
+		ser2.write(lista[i])
 
 def string_write (index, numero_codice):
 	
@@ -30,7 +28,7 @@ def string_write (index, numero_codice):
 		ls1 = calcola_checksum(ls1, lista[i])
 	lista.append(ls1)
 	for i in range (0, len(lista)):
-		ser.write(ls_ser[i])
+		ser2.write(ls_ser[i])
 		
 def light_led (index, bit):
 	lista = ["\x01","\x0E",chr(index),"\x00",chr(bit)]
@@ -39,7 +37,7 @@ def light_led (index, bit):
 		ls1 = calcola_checksum(ls1, lista[i])
 	lista.append(ls1)
 	for i in range (0, len(lista)):
-		ser.write(lista[i])
+		ser2.write(lista[i])
 	
 def set_temperature (index, val):
 	lista = ["\x01","\x12",chr(index),"\x00",chr(val)]
@@ -48,11 +46,7 @@ def set_temperature (index, val):
 		ls1 = calcola_checksum(ls1, lista[i])
 	lista.append(ls1)
 	for i in range (0, len(lista)):
-		ser.write(lista[i])
-pacchetto = ""
-lista = []
-
-
+		ser2.write(lista[i])
 
 def calcola_checksum (comando, parametro):
 	com = ord(comando)
@@ -63,10 +57,8 @@ def calcola_checksum (comando, parametro):
 	
 def verifica (lista):
 	if len(lista) == 6:
-		pwd1 = db_query.read_userCode(1)
-		pwd2 = db_query.read_userCode(2)
-		print pwd1
-		print pwd2
+		pwd1 = "170509"
+		pwd2 = "905071"
 		lista_control1 = []
 		for i in range (0, len(pwd1)):
 			lista_control1.append(pwd1[i])
@@ -96,35 +88,37 @@ def spacchetta(pacchetto):
 	else:
 		return "NO"
 	
-
-
-
-
-while True: 
-	s = ser.read(1) 
-	if len(s)>0:	
-		pacchetto="".join([pacchetto,s])
+def function(): 
+	lettura = ser2.read(1) 
+	if len(lettura)>0:	
+#		print "%x" %(ord(lettura))
+		return lettura
+		
+"""		
 	else:
 		if len(pacchetto)>=3:
-			s = spacchetta(pacchetto)
-			if s == "OK":
+			spacchettamento = spacchetta(pacchetto)
+			if spacchettamento == "OK":
 				numero_codice = pacchetto[-2]
+				numero_bottone = pacchetto [2]
+				comando = pacchetto [1]
 				if numero_codice == "\x08":
 					x = verifica(lista)
-					if x == 1:
-						goto_form(1)
-					elif x == 2:
-						goto_form(2)
-					elif x == 3:
-						goto_form(3)
+					return x
 				elif numero_codice == "\x3c":
 					if len(lista)>0:
 						for i in range (0, len(lista)):
 							print lista[i]
 						del lista [-1]
+				elif (comando == "\x06") & (numero_bottone == "\x00"):
+					return "attiva_allarme"
+				elif (comando == "\x06") & (numero_bottone == "\x01"):
+					goto_form(1)
+				elif (comando == "\x06") & (numero_bottone == "\x02"):
+					return "attiva_allarme"
+					
 				else:
 					lista.append (numero_codice)
-	#				string_write (ser, 1, numero_codice)
 		pacchetto = ""
 	
-ser.close()
+"""

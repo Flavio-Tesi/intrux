@@ -8,20 +8,9 @@ import threading
 import db_query
 import daisy_function
 import comandi_shell
+import screen_read
 import rfid
 import send_email
-
-"""
-import screen_read
-class ThreadScreen(threading.Thread):													#thread per schermo
-	def run(self):
-		while True:
-			screen_read.function()
-			time.sleep(0.5)	
-ts = ThreadScreen()
-ts.daemon = True
-ts.start()
-"""
 
 class ThreadTemp(threading.Thread):														#thread per log temperature
 	def run(self):
@@ -33,9 +22,9 @@ class ThreadTemp(threading.Thread):														#thread per log temperature
 			ora = datetime.datetime.strftime(x,"%H:%M:%S")
 			db_query.set_temperature(id_room, val, dat, ora)
 			time.sleep(1800)
-tt = ThreadTemp()
-tt.daemon = True
-tt.start()
+ttemperature = ThreadTemp()
+ttemperature.daemon = True
+ttemperature.start()
 
 class ThreadRecordCam(threading.Thread):												#thread per record cam
 	def __init__(self):
@@ -45,8 +34,8 @@ class ThreadRecordCam(threading.Thread):												#thread per record cam
 		self._stop.set()
 	def run(self):
 		comandi_shell.on_record()
-trc = ThreadRecordCam()
-trc.daemon = True
+treccam = ThreadRecordCam()
+treccam.daemon = True
 
 class ThreadCam(threading.Thread):														#thread per cam
 	def __init__(self):
@@ -56,10 +45,10 @@ class ThreadCam(threading.Thread):														#thread per cam
 		self._stop.set()
 	def run(self):
 		comandi_shell.on_cam_640_480()	
-tc = ThreadCam()
-tc.daemon = True
+tcam = ThreadCam()
+tcam.daemon = True
 
-class ThreadCamHD(threading.Thread):													#thread per cam
+class ThreadCamHD(threading.Thread):													#thread per cam hd
 	def __init__(self):
 		super(ThreadCamHD, self).__init__()
 		self._stop = threading.Event()
@@ -67,8 +56,8 @@ class ThreadCamHD(threading.Thread):													#thread per cam
 		self._stop.set()
 	def run(self):
 		comandi_shell.on_cam_1280_720()
-tchd = ThreadCamHD()
-tchd.daemon = True
+tcamhd = ThreadCamHD()
+tcamhd.daemon = True
 
 class ThreadAllarme(threading.Thread):													# thread allarme
 	def __init__(self):
@@ -79,12 +68,15 @@ class ThreadAllarme(threading.Thread):													# thread allarme
 	def stopped(self):
 		return self._stop.isSet()					
 	def run(self):
+		allarm = "disattivato"
 		while not(self.stopped()):
-			daisy_function.allarme()
+			x = daisy_function.allarme(allarm)
+			if x == "ALLARME":
+				allarm = "attivato"
 			time.sleep(0.1)					
-ta = ThreadAllarme()
-ta.daemon = True
-ta.stop()
+tallarme = ThreadAllarme()
+tallarme.daemon = True
+tallarme.stop()
 
 class ThreadLuci(threading.Thread):														#thread per luci
 	def run(self):
@@ -111,38 +103,135 @@ class ThreadLuci(threading.Thread):														#thread per luci
 			elif x == "41":
 				d = True		
 			time.sleep(0.1)	
-tl = ThreadLuci()
-tl.daemon = True
-tl.start()
+tluci = ThreadLuci()
+tluci.daemon = True
+tluci.start()
+
+class ThreadScreen(threading.Thread):													#thread per schermo
+	def __init__(self):
+		super(ThreadScreen, self).__init__()
+		self._stop = threading.Event()
+	def stop(self):
+		self._stop.set()
+	def stopped(self):
+		return self._stop.isSet()					
+	def run(self):
+		pacchetto = ""
+		lista = []
+		while True:
+			lettura = screen_read.function()
+			
+			if lettura != None:
+				pacchetto="".join([pacchetto,lettura])
+
+			# GLI ACK PER IL GOTO_FORM
+			if pacchetto != "":
+				if pacchetto[0] == "\x06":
+					pacchetto = ""
+				
+			if len(pacchetto) == 6:			
+				spacchettamento = screen_read.spacchetta(pacchetto)
+				
+				if spacchettamento == "OK":
+					numero_codice = pacchetto[-2]
+					numero_bottone = pacchetto [2]
+					comando = pacchetto [1]
+
+					if numero_codice == "\x08":
+						
+						x = screen_read.verifica(lista)
+						if x == 1:
+							screen_read.goto_form(1)
+							time.sleep(0.1)
+							pacchetto = ""		
+							daisy_function.stop_allarme()
+							tallarme.stop()
+							daisy_function.luce_allarme_disattivato()	
+						elif x == 2:
+							screen_read.goto_form(2)	
+							time.sleep(0.1)
+							pacchetto = ""			
+							daisy_function.stop_allarme()
+							tallarme.stop()
+							daisy_function.luce_allarme_disattivato()	
+							orario = datetime.datetime.strftime(datetime.datetime.now(),"%H:%M")	
+							if not((orario > '10:00') & (orario < '21:00')):
+								send_email.invia_email_rfid_utente()	
+					elif numero_codice == "\x3c":
+						if len(lista)>0:
+							del lista [-1]
+					elif (comando == "\x06") & (numero_bottone == "\x00"):
+						tallarme.__init__()
+						tallarme.start()
+						daisy_function.luce_allarme_attivato()
+						pacchetto = ""
+						del lista[0:99] 
+						screen_read.goto_form(0)
+						time.sleep(0.1)
+						pacchetto = ""		
+					elif (comando == "\x06") & (numero_bottone == "\x01"):
+						screen_read.goto_form(1)
+						time.sleep(0.1)
+						pacchetto = ""
+						del lista[0:99] 
+					elif (comando == "\x06") & (numero_bottone == "\x02"):
+						tallarme.__init__()
+						tallarme.start()
+						daisy_function.luce_allarme_attivato()
+						pacchetto = ""
+						del lista[0:99] 
+						screen_read.goto_form(0)
+						time.sleep(0.1)
+						pacchetto = ""		
+					else:
+						lista.append (numero_codice)
+				pacchetto = ""
+			
+		time.sleep(0.5)	
+tschermo = ThreadScreen()
+tschermo.daemon = True
+tschermo.stop()
+tschermo.start()
 
 class ThreadRFID(threading.Thread):														#thread per rfid
 	def run(self):
 		while True:
 			x = rfid.function()
 			if x == "admin": 
-				if ta.stopped():
-					ta.__init__()
-					ta.start()
+				if tallarme.stopped():
+					tallarme.__init__()
+					tallarme.start()
 					daisy_function.luce_allarme_attivato()
+					screen_read.goto_form(0)
+					time.sleep(0.1)
 				else:
 					daisy_function.stop_allarme()
-					ta.stop()
+					tallarme.stop()
 					daisy_function.luce_allarme_disattivato()
+					screen_read.goto_form(1)
+					time.sleep(0.1)		
 			if x == "user":
-				if ta.stopped():
-					ta.__init__()
-					ta.start()
+				if tallarme.stopped():
+					tallarme.__init__()
+					tallarme.start()
 					daisy_function.luce_allarme_attivato()
+					screen_read.goto_form(0)
+					time.sleep(0.1)
+					pacchetto = ""		
 				else:
 					daisy_function.stop_allarme()
-					ta.stop()
+					tallarme.stop()
 					daisy_function.luce_allarme_disattivato()
 					orario = datetime.datetime.strftime(datetime.datetime.now(),"%H:%M")
 					if not((orario > '10:00') & (orario < '21:00')):
 						send_email.invia_email_rfid_utente()
-tr = ThreadRFID()
-tr.daemon = True
-tr.start()
+					screen_read.goto_form(2)
+					time.sleep(0.1)
+					pacchetto = ""		
+trfid = ThreadRFID()
+trfid.daemon = True
+trfid.start()
+
 
 class execute(tornado.web.RequestHandler):
 	def get(self):
@@ -181,49 +270,36 @@ class execute(tornado.web.RequestHandler):
 		
 		elif self.get_argument('cmd')=="stop_allarme":									#ferma allarme	
 			daisy_function.stop_allarme()
-			ta.stop()
+			tallarme.stop()
 		elif self.get_argument('cmd')=="start_allarme":									#avvia allarme	
-			if ta.stopped():
-				ta.__init__()
-				ta.start()
+			if tallarme.stopped():
+				tallarme.__init__()
+				tallarme.start()
 		elif self.get_argument('cmd')=="on_cam":										#accendi cam a bassa risoluzione
 			comandi_shell.off_cam()
 			time.sleep(1)
-			tc.__init__()
-			tc.start()	
+			tcam.__init__()
+			tcam.start()	
 			time.sleep(2)
 		elif self.get_argument('cmd')=="on_cam_hd":										#accendi cam a alta risoluzione
 			comandi_shell.off_cam()
 			time.sleep(1)
-			tchd.__init__()
-			tchd.start()
+			tcamhd.__init__()
+			tcamhd.start()
 			time.sleep(2)
 		elif self.get_argument('cmd')=="off_cam":										#spegni cam
-			tc.stop()
-			tchd.stop()
-			comandi_shell.off_cam()	
-			tcp.stop()
+			tcam.stop()
+			tcamhd.stop()
+			comandi_shell.off_cam()
 		elif self.get_argument('cmd')=="record_video":									#record cam
-			tc.stop()
-			tchd.stop()
+			tcam.stop()
+			tcamhd.stop()
 			comandi_shell.off_cam()	
-			trc.__init__()
-			trc.start()
+			treccam.__init__()
+			treccam.start()
 		elif self.get_argument('cmd')=="stop_record_video":								#stop record cam
-			print "213"
-			print "214"
-			print "215"
-			print "216"
-			print "217"
-			trc.stop()
-			print "219"
-			print "220"
-			print "221"
-			print "222"
-			print "223"
+			treccam.stop()
 			comandi_shell.off_record()
-			print "225"
-			print "226"
 			
 
 		

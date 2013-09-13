@@ -9,10 +9,11 @@ ser = serial.Serial(
     bytesize=serial.EIGHTBITS
 )  
 
+
+
 codice = []
 
 def controlla(codice):
-	print codice
 	if codice == [48,49,48,55,52,67,53,68,51,48,50,55]:
 		del codice[0:99] 
 		return "admin"
@@ -29,3 +30,4 @@ def function():
 		codice.append (ord(s))
 		if len(codice)==12:
 			return controlla(codice)
+
